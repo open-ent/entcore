@@ -44,7 +44,7 @@ import java.util.*;
 		"fr.wseduc.security.ResourceFilter", "fr.wseduc.rs.ApiDoc", "fr.wseduc.rs.ApiPrefixDoc",
 		"org.entcore.common.http.filter.ResourceFilter", "org.entcore.common.http.filter.IgnoreCsrf",
         "org.entcore.common.http.filter.Trace", "org.entcore.common.cache.Cache"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class ControllerAnnotationProcessor extends fr.wseduc.processor.ControllerAnnotationProcessor {
 
 	@Override

@@ -198,7 +198,7 @@ public class DefaultMassMailService extends Renders implements MassMailService {
     }
 
     public void massMailTypeCSV(final HttpServerRequest request, JsonArray users) {
-        String path = FileResolver.absolutePath("view/text/export.txt");
+        String path = FileResolver.absolutePath(config.getString("main"),"view/text/export.txt");
 
         vertx.fileSystem().readFile(path, result -> {
             if (!result.succeeded()) {

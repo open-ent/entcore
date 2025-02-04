@@ -199,16 +199,16 @@ public class TimetableReport {
   private String waitFileID = null;
   private Handler<String> waitFileHandler = null;
 
-  public TimetableReport(Vertx vertx) {
-    this(vertx, "fr");
+  public TimetableReport(Vertx vertx, JsonObject config) {
+    this(vertx, config, "fr");
   }
 
-  public TimetableReport(Vertx vertx, String locale) {
+  public TimetableReport(Vertx vertx, JsonObject config, String locale) {
     this.templator = TimetableReport.templateProcessors.get(vertx);
 
     if(this.templator == null)
     {
-      this.templator = new FileTemplateProcessor(vertx, "template");
+      this.templator = new FileTemplateProcessor(vertx, config.getString("main"), "template");
       this.templator.escapeHTML(false);
 
       this.templator.setLambda("i18n", new I18nLambda(locale));
@@ -414,12 +414,12 @@ public class TimetableReport {
 
   public void temporaryGroupCreated(String group) {
     if (this.groupsCreated.containsKey(group) == false)
-      this.groupsCreated.put(group, new Boolean(false));
+      this.groupsCreated.put(group, Boolean.valueOf(false));
   }
 
   public void validateGroupCreated(String group) {
     if (this.groupsCreated.containsKey(group))
-      this.groupsCreated.put(group, new Boolean(true));
+      this.groupsCreated.put(group, Boolean.valueOf(true));
   }
 
   public void groupUpdated(String group) {

@@ -226,7 +226,7 @@ public abstract class AbstractTimetableImporter implements TimetableImporter {
 	protected final boolean authorizeUpdateGroups;
 	protected final boolean authoriseUpdateTimetable;
 
-	protected AbstractTimetableImporter(Vertx vertx, Storage storage, String uai, String path, String acceptLanguage,
+	protected AbstractTimetableImporter(Vertx vertx, JsonObject config, Storage storage, String uai, String path, String acceptLanguage,
 										boolean authorizeUserCreation, boolean isManualImport, boolean authorizeUpdateGroups, boolean authoriseUpdateTimetable,
 										Long forceTimestamp)
 	{
@@ -240,7 +240,7 @@ public abstract class AbstractTimetableImporter implements TimetableImporter {
 		this.authoriseUpdateTimetable = authoriseUpdateTimetable;
 		this.forceTimestamp = forceTimestamp;
 
-		this.ttReport = new TimetableReport(vertx);
+		this.ttReport = new TimetableReport(vertx, config);
 		this.ttReport.setSource(this.getTimetableSource());
 		this.ttReport.setManual(isManualImport);
 		this.ttReport.setUAI(UAI);

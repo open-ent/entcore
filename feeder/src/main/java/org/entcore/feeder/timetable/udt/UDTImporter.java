@@ -100,10 +100,11 @@ public class UDTImporter extends AbstractTimetableImporter {
 	private Map<String, TimetableReport.Subject> ttSubjects = new HashMap<String, TimetableReport.Subject>();
 	private JsonArray parsedWeeks = new JsonArray();
 
-	public UDTImporter(Vertx vertx, Storage storage, String uai, String path, String acceptLanguage,
+	public UDTImporter(Vertx vertx, JsonObject config, Storage storage, String uai, String path, String acceptLanguage,
 						boolean authorizeUserCreation, boolean isManualImport, boolean updateGroups, boolean updateTimetable, Long forceTimestamp) {
-		super(vertx, storage, uai, path, acceptLanguage, authorizeUserCreation, isManualImport, updateGroups, updateTimetable, forceTimestamp);
+		super(vertx, config, storage, uai, path, acceptLanguage, authorizeUserCreation, isManualImport, updateGroups, updateTimetable, forceTimestamp);
 		this.vertx = vertx;
+
 		filenameWeekPatter = Pattern.compile("(UDCal|udcal)_[0-9]{2}_([0-9]{2})\\.xml$");
 	}
 
@@ -355,7 +356,7 @@ public class UDTImporter extends AbstractTimetableImporter {
 				if (getTimetableSource().equals(teacherId[1]) && authorizeUserCreation) {
 					updateUser(p);
 				}
-				foundTeachers.put(teacherId[0], new Boolean(true));
+				foundTeachers.put(teacherId[0], Boolean.valueOf(true));
 				this.ttReport.teacherFound();
 			} else {
 				final String userId = UUID.randomUUID().toString();
@@ -1031,11 +1032,11 @@ public class UDTImporter extends AbstractTimetableImporter {
 		}
 	}
 
-	public static void launchImport(Vertx vertx, Storage storage, final Message<JsonObject> message, boolean udtUserCreation) {
-		launchImport(vertx, storage, message, null, udtUserCreation, null);
+	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, final Message<JsonObject> message, boolean udtUserCreation) {
+		launchImport(vertx, config, storage, message, null, udtUserCreation, null);
 	}
 
-	public static void launchImport(Vertx vertx, Storage storage, final Message<JsonObject> message, final PostImport postImport, boolean udtUserCreation, Long forceDateTimestamp) {
+	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, final Message<JsonObject> message, final PostImport postImport, boolean udtUserCreation, Long forceDateTimestamp) {
 		final I18n i18n = I18n.getInstance();
 		final String uai = message.body().getString("UAI");
 		final boolean updateGroups = message.body().getBoolean("updateGroups", true);
@@ -1055,7 +1056,7 @@ public class UDTImporter extends AbstractTimetableImporter {
 			final long start = System.currentTimeMillis();
 			log.info("Launch UDT import : " + uai + forceDateStr);
 
-			new UDTImporter(vertx, storage, uai, path, acceptLanguage, udtUserCreation, isManualImport, updateGroups, updateTimetable, forceDateTimestamp)
+			new UDTImporter(vertx, config, storage, uai, path, acceptLanguage, udtUserCreation, isManualImport, updateGroups, updateTimetable, forceDateTimestamp)
 			.launch(new Handler<AsyncResult<Report>>() {
 				@Override
 				public void handle(AsyncResult<Report> event) {

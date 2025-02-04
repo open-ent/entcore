@@ -234,7 +234,7 @@ public abstract class BaseServer extends Server {
 				Neo4j.getInstance().init(vertx, neo4jConfigJson.mergeIn(neo4jConfigOverride));
 			}
 			Neo4jUtils.loadScripts(this.getClass().getSimpleName(), vertx,
-					FileResolver.absolutePath(config.getString("neo4j-init-scripts", "neo4j")));
+					FileResolver.absolutePath(config.getString("main"), config.getString("neo4j-init-scripts", "neo4j")));
 		}
 		if (config.getBoolean("mongodb", true)) {
 			MongoDb.getInstance().init(getEventBus(vertx), node +
@@ -255,7 +255,7 @@ public abstract class BaseServer extends Server {
 				postgresConfig.getString("sqlAdminAdress", "sql.persistor.admin")
 			);
 			DB migration = new DB(vertx, sqlAdmin, schema);
-			migration.loadScripts(FileResolver.absolutePath(config.getString("init-scripts", "sql")));
+			migration.loadScripts(FileResolver.absolutePath(config.getString("main"),config.getString("init-scripts", "sql")));
 		}
 		if (config.getBoolean("elasticsearch", false)) {
 			if (config.getJsonObject("elasticsearchConfig") != null) {
@@ -283,7 +283,7 @@ public abstract class BaseServer extends Server {
 		JsonSchemaValidator validator = JsonSchemaValidator.getInstance();
 		validator.setEventBus(getEventBus(vertx));
 		validator.setAddress(node + "json.schema.validator");
-		validator.loadJsonSchema(getPathPrefix(config), vertx);
+		validator.loadJsonSchema(getPathPrefix(config), vertx, config);
 	}
 
 	private void loadI18nAssetsFiles() {

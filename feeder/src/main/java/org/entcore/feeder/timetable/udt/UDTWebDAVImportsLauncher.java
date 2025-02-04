@@ -35,6 +35,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.FileProps;
 
+import io.vertx.core.json.JsonObject;
 import org.entcore.common.storage.Storage;
 import org.entcore.feeder.dictionary.structures.PostImport;
 import org.entcore.feeder.timetable.edt.EDTUtils;
@@ -45,13 +46,13 @@ public class UDTWebDAVImportsLauncher extends WebDAVImportsLauncher {
 	private static final Pattern UDT_WEBDAV_PATTERN = Pattern.compile("([0-9]{7}[A-Z])_([0-9]{14})_UDT\\.zip");
     private static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-	public UDTWebDAVImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
-		super(vertx, storage, path, postImport, timetableUserCreation, isManualImport);
+	public UDTWebDAVImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
+		super(vertx, config, storage, path, postImport, timetableUserCreation, isManualImport);
 	}
 
-	public UDTWebDAVImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
+	public UDTWebDAVImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
 			boolean timetableUserCreation, boolean isManualImport) {
-        super(vertx, storage, path, postImport, edtUtils, timetableUserCreation, isManualImport);
+        super(vertx, config, storage, path, postImport, edtUtils, timetableUserCreation, isManualImport);
 	}
 
     protected void chooseFileToImport(List<String> files, Handler<String> handler)

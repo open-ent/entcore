@@ -92,9 +92,9 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 	private final Map<String, TimetableReport.Subject> subjectsById = new HashMap<>();
 	private int maxYearWeek;
 
-	public EDTImporter(Vertx vertx, Storage storage, EDTUtils edtUtils, String uai, String path, String acceptLanguage,
+	public EDTImporter(Vertx vertx, JsonObject config, Storage storage, EDTUtils edtUtils, String uai, String path, String acceptLanguage,
 			String mode, boolean authorizeUserCreation, boolean isManualImport, boolean updateGroups, boolean updateTimetable, Long forceTimestamp) {
-		super(vertx, storage, uai, path, acceptLanguage, authorizeUserCreation, isManualImport, updateGroups, updateTimetable, forceTimestamp);
+		super(vertx, config, storage, uai, path, acceptLanguage, authorizeUserCreation, isManualImport, updateGroups, updateTimetable, forceTimestamp);
 		this.edtUtils = edtUtils;
 		this.mode = mode;
 	}
@@ -309,7 +309,7 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 				try {
 					final JsonObject user = persEducNat.applyMapping(currentEntity.copy());
 					updateUser(user.put(IDPN, idPronote));
-					foundTeachers.put(teacherId[0], new Boolean(true));
+					foundTeachers.put(teacherId[0], Boolean.valueOf(true));
 					ttReport.teacherFound();
 				} catch (ValidationException e) {
 					ttReport.addUnknownTeacher(teacher);
@@ -317,7 +317,7 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 				}
 			} else
 			{
-				foundTeachers.put(teacherId[0], new Boolean(true));
+				foundTeachers.put(teacherId[0], Boolean.valueOf(true));
 				ttReport.teacherFound();
 			}
 		} else {
@@ -727,11 +727,11 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 		return "IDPN";
 	}
 
-	public static void launchImport(Vertx vertx, Storage storage, EDTUtils edtUtils, final Message<JsonObject> message, boolean edtUserCreation) {
-		launchImport(vertx, storage, edtUtils, "prod", message, null, edtUserCreation, null);
+	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, EDTUtils edtUtils, final Message<JsonObject> message, boolean edtUserCreation) {
+		launchImport(vertx, config, storage, edtUtils, "prod", message, null, edtUserCreation, null);
 	}
 
-	public static void launchImport(Vertx vertx, Storage storage, EDTUtils edtUtils, final String mode, final Message<JsonObject> message, final PostImport postImport, boolean edtUserCreation, Long forceDateTimestamp) {
+	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, EDTUtils edtUtils, final String mode, final Message<JsonObject> message, final PostImport postImport, boolean edtUserCreation, Long forceDateTimestamp) {
 		final I18n i18n = I18n.getInstance();
 		final String acceptLanguage = message.body().getString("language", "fr");
 		if (edtUtils == null) {
@@ -757,7 +757,7 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 			final long start = System.currentTimeMillis();
 			log.info("Launch EDT import : " + uai + forceDateStr);
 
-			new EDTImporter(vertx, storage, edtUtils, uai, path, acceptLanguage, mode, edtUserCreation, isManualImport, updateGroups, updateTimetable, forceDateTimestamp)
+			new EDTImporter(vertx, config, storage, edtUtils, uai, path, acceptLanguage, mode, edtUserCreation, isManualImport, updateGroups, updateTimetable, forceDateTimestamp)
 			.launch(new Handler<AsyncResult<Report>>() {
 				@Override
 				public void handle(AsyncResult<Report> event) {

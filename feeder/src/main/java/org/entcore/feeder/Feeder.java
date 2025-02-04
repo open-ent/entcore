@@ -213,15 +213,15 @@ public class Feeder extends BusModBase implements Handler<Message<JsonObject>> {
 						config.getString("pronote-partner-name", "NEO-Open"));
 
 				feeds.put("PRONOTE", new EDTFeederLauncher(edtUtils, config.getString("mode", "prod")));
-				setupImportCron(edt, new ImportsLauncher(vertx, storage, null, postImport, edtUtils, config.getBoolean("edt-user-creation", false), false));
+				setupImportCron(edt, new ImportsLauncher(vertx, config, storage, null, postImport, edtUtils, config.getBoolean("edt-user-creation", false), false));
 			}
 		}
 		final JsonObject udt = config.getJsonObject("udt");
 		if (udt != null) {
-			setupImportCron(udt, new ImportsLauncher(vertx, storage, null, postImport, edtUtils, config.getBoolean("udt-user-creation", false), false));
+			setupImportCron(udt, new ImportsLauncher(vertx, config, storage, null, postImport, edtUtils, config.getBoolean("udt-user-creation", false), false));
 
 			final JsonObject udtWebdav = udt.getJsonObject("webdav");
-			setupImportCron(udtWebdav, new UDTWebDAVImportsLauncher(vertx, storage, null, postImport, null, false, false));
+			setupImportCron(udtWebdav, new UDTWebDAVImportsLauncher(vertx, config, storage, null, postImport, null, false, false));
 
 		}
 		final JsonObject csv = config.getJsonObject("csv");
@@ -238,7 +238,7 @@ public class Feeder extends BusModBase implements Handler<Message<JsonObject>> {
 				}
 			}
 		}
-		I18n.getInstance().init(vertx);
+		I18n.getInstance().init(vertx, config);
 		validatorFactory = new ValidatorFactory(vertx);
 	}
 
@@ -468,11 +468,11 @@ public class Feeder extends BusModBase implements Handler<Message<JsonObject>> {
 				AbstractTimetableImporter.initStructure(eb, message);
 				break;
 			case "manual-edt":
-				EDTImporter.launchImport(vertx, storage, edtUtils, config.getString("mode", "prod"), message, postImport,
+				EDTImporter.launchImport(vertx, config, storage, edtUtils, config.getString("mode", "prod"), message, postImport,
 						config.getBoolean("edt-user-creation", false), config.getLong("edt-udt-force-timestamp"));
 				break;
 			case "manual-udt":
-				UDTImporter.launchImport(vertx, storage, message, postImport,
+				UDTImporter.launchImport(vertx, config, storage, message, postImport,
 						config.getBoolean("udt-user-creation", false), config.getLong("edt-udt-force-timestamp"));
 				break;
 			case "reinit-logins" :

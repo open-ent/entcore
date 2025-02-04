@@ -38,7 +38,8 @@ import io.vertx.core.logging.LoggerFactory;
 public class TimelineNotificationsLoader {
 
 	private final Vertx vertx;
-	private final static String notifyDir = FileResolver.absolutePath("view/notify");
+	private final JsonObject config;
+
 	private static final Logger log = LoggerFactory.getLogger(TimelineNotificationsLoader.class);
 	private AsyncMap<String, String> sharedMap;
 	private final static String sharedMapName = "notificationsMap";
@@ -65,15 +66,16 @@ public class TimelineNotificationsLoader {
 		}
 	}
 
-	public static TimelineNotificationsLoader getInstance(Vertx vertx){
+	public static TimelineNotificationsLoader getInstance(Vertx vertx, JsonObject config){
 		if(instance == null){
-			instance = new TimelineNotificationsLoader(vertx);
+			instance = new TimelineNotificationsLoader(vertx, config);
 		}
 		return instance;
 	}
 
-	private TimelineNotificationsLoader(Vertx vertx){
+	private TimelineNotificationsLoader(Vertx vertx, JsonObject config){
 		this.vertx = vertx;
+		this.config = config;
 		MapFactory.getClusterMap(sharedMapName, vertx, new Handler<AsyncMap<String, String>>() {
 			@Override
 			public void handle(AsyncMap<String, String> map) {
@@ -106,6 +108,7 @@ public class TimelineNotificationsLoader {
 	}
 
 	private void scanNotifications(){
+		String notifyDir = FileResolver.absolutePath(config.getString("main"), "view/notify");
 		final Handler<AsyncResult<List<String>>> notifyDirHandler = new Handler<AsyncResult<List<String>>>(){
 			public void handle(AsyncResult<List<String>> ar) {
 				if(ar.succeeded()) {

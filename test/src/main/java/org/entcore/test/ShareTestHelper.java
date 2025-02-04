@@ -38,15 +38,15 @@ public class ShareTestHelper {
             // before tests
             final URL uri = getClass().getClassLoader().getResource("securedaction");
             final String parent = Paths.get(uri.toURI()).getParent().toAbsolutePath().toString();
-            final String oldValue = FileResolver.absolutePath("");
+            final String oldValue = FileResolver.absolutePath("test", "");
             try {
 
-                FileResolver.getInstance().setBasePath(parent);
-                final JsonArray actions = StartupUtils.loadSecuredActions(vertx);
+                FileResolver.getInstance().setBasePath("test", parent);
+                final JsonArray actions = StartupUtils.loadSecuredActions(vertx, new JsonObject().put("main", "test"));
                 final Map<String, SecuredAction> mapActions = StartupUtils.securedActionsToMap(actions);
                 return new SqlShareService(schema, table, vertx.eventBus(), mapActions, null);
             } finally {
-                FileResolver.getInstance().setBasePath(oldValue);
+                FileResolver.getInstance().setBasePath("test", oldValue);
             }
         } catch (Exception e) {
             context.fail(e);
@@ -60,15 +60,15 @@ public class ShareTestHelper {
             // before tests
             final URL uri = getClass().getClassLoader().getResource("securedaction");
             final String parent = Paths.get(uri.toURI()).getParent().toAbsolutePath().toString();
-            final String oldValue = FileResolver.absolutePath("");
+            final String oldValue = FileResolver.absolutePath("test", "");
             try {
 
-                FileResolver.getInstance().setBasePath(parent);
-                final JsonArray actions = StartupUtils.loadSecuredActions(vertx);
+                FileResolver.getInstance().setBasePath("test", parent);
+                final JsonArray actions = StartupUtils.loadSecuredActions(vertx, new JsonObject().put("main", "test"));
                 final Map<String, SecuredAction> mapActions = StartupUtils.securedActionsToMap(actions);
                 return new MongoDbShareService(vertx.eventBus(), MongoDb.getInstance(), collection, mapActions, null);
             } finally {
-                FileResolver.getInstance().setBasePath(oldValue);
+                FileResolver.getInstance().setBasePath("test", oldValue);
             }
         } catch (Exception e) {
             context.fail(e);
@@ -82,15 +82,15 @@ public class ShareTestHelper {
             // before tests
             final URL uri = getClass().getClassLoader().getResource("securedaction");
             final String parent = Paths.get(uri.toURI()).getParent().toAbsolutePath().toString();
-            final String oldValue = FileResolver.absolutePath("");
+            final String oldValue = FileResolver.absolutePath("test", "");
             try {
 
-                FileResolver.getInstance().setBasePath(parent);
-                final JsonArray actions = StartupUtils.loadSecuredActions(vertx);
+                FileResolver.getInstance().setBasePath("test", parent);
+                final JsonArray actions = StartupUtils.loadSecuredActions(vertx, new JsonObject().put("main", "test"));
                 final Map<String, SecuredAction> mapActions = StartupUtils.securedActionsToMap(actions);
                 return mapActions;
             } finally {
-                FileResolver.getInstance().setBasePath(oldValue);
+                FileResolver.getInstance().setBasePath("test", oldValue);
             }
         } catch (Exception e) {
             context.fail(e);

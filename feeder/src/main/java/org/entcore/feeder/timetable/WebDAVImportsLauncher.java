@@ -31,6 +31,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.FileProps;
 
+import io.vertx.core.json.JsonObject;
 import org.entcore.common.storage.Storage;
 import org.entcore.feeder.dictionary.structures.PostImport;
 import org.entcore.feeder.timetable.edt.EDTUtils;
@@ -39,13 +40,13 @@ import org.w3c.dom.events.Event;
 public class WebDAVImportsLauncher extends ImportsLauncher {
 
 
-	public WebDAVImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
-		super(vertx, storage, path, postImport, timetableUserCreation, isManualImport);
+	public WebDAVImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
+		super(vertx, config, storage, path, postImport, timetableUserCreation, isManualImport);
 	}
 
-	public WebDAVImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
+	public WebDAVImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
 			boolean timetableUserCreation, boolean isManualImport) {
-        super(vertx, storage, path, postImport, edtUtils, timetableUserCreation, isManualImport);
+        super(vertx, config, storage, path, postImport, edtUtils, timetableUserCreation, isManualImport);
 	}
 
 	protected void listFiles(Handler<AsyncResult<List<String>>> handler)

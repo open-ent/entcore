@@ -52,7 +52,7 @@ import static fr.wseduc.webutils.Utils.handlerToAsyncHandler;
 public class TimelineHelper {
 
 	private static final String TIMELINE_ADDRESS = "wse.timeline";
-	private final static String messagesDir = FileResolver.absolutePath("i18n/timeline");
+
 	private final EventBus eb;
 	private final Renders render;
 	private final Vertx vertx;
@@ -65,7 +65,7 @@ public class TimelineHelper {
 		this.render = new Renders(vertx, config);
 		this.vertx = vertx;
 		this.config = config;
-		this.notificationsLoader = TimelineNotificationsLoader.getInstance(vertx);
+		this.notificationsLoader = TimelineNotificationsLoader.getInstance(vertx, config);
 		loadTimelineI18n();
 		loadAssetsTimelineDirectory();
 	}
@@ -206,6 +206,7 @@ public class TimelineHelper {
 
 
 	private void loadTimelineI18n() {
+		String messagesDir = FileResolver.absolutePath(config.getString("main"), "i18n/timeline");
 		vertx.fileSystem().exists(messagesDir, new Handler<AsyncResult<Boolean>>() {
 			@Override
 			public void handle(AsyncResult<Boolean> ar) {

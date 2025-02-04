@@ -42,6 +42,7 @@ public class ImportsLauncher implements Handler<Long> {
 	protected static final Logger log = LoggerFactory.getLogger(ImportsLauncher.class);
 	protected static final Pattern UAI_PATTERN = Pattern.compile(".*([0-9]{7}[A-Z]).*");
 	protected final Vertx vertx;
+	protected final JsonObject config;
 	protected final Storage storage;
 	protected String path;
 	protected final PostImport postImport;
@@ -49,8 +50,9 @@ public class ImportsLauncher implements Handler<Long> {
 	protected final boolean timetableUserCreation;
 	protected final boolean isManualImport;
 
-	public ImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
+	public ImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, boolean timetableUserCreation, boolean isManualImport) {
 		this.vertx = vertx;
+		this.config = config;
 		this.storage = storage;
 		this.path = path;
 		this.postImport = postImport;
@@ -58,9 +60,9 @@ public class ImportsLauncher implements Handler<Long> {
 		this.isManualImport = isManualImport;
 	}
 
-	public ImportsLauncher(Vertx vertx, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
+	public ImportsLauncher(Vertx vertx, JsonObject config, Storage storage, String path, PostImport postImport, EDTUtils edtUtils,
 			boolean timetableUserCreation, boolean isManualImport) {
-		this(vertx, storage, path, postImport, timetableUserCreation, isManualImport);
+		this(vertx, config, storage, path, postImport, timetableUserCreation, isManualImport);
 		this.edtUtils = edtUtils;
 	}
 
@@ -127,9 +129,9 @@ public class ImportsLauncher implements Handler<Long> {
 					.put("isManualImport", isManualImport)
 					.put("language", "fr");
 			if (edtUtils != null) {
-				EDTImporter.launchImport(vertx, storage, edtUtils, m, timetableUserCreation);
+				EDTImporter.launchImport(vertx, config, storage, edtUtils, m, timetableUserCreation);
 			} else {
-				UDTImporter.launchImport(vertx, storage, m, timetableUserCreation);
+				UDTImporter.launchImport(vertx, config, storage, m, timetableUserCreation);
 			}
 		} else {
 			log.error("UAI not found in filename " + file);

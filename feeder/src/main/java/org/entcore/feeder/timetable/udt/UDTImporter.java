@@ -1037,7 +1037,7 @@ public class UDTImporter extends AbstractTimetableImporter {
 	}
 
 	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, final Message<JsonObject> message, final PostImport postImport, boolean udtUserCreation, Long forceDateTimestamp) {
-		final I18n i18n = I18n.getInstance();
+		final I18n i18n = I18n.getInstance(config.getString("main"));
 		final String uai = message.body().getString("UAI");
 		final boolean updateGroups = message.body().getBoolean("updateGroups", true);
 		final boolean updateTimetable = message.body().getBoolean("updateTimetable", true);

@@ -90,47 +90,47 @@ public class PostgresEmailSender implements EmailSender {
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String cc, String bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, getSenderEmail(), cc, bcc, subject, templateBody,
+        sendEmail(config, request, to, getSenderEmail(), cc, bcc, subject, templateBody,
                 templateParams, translateSubject, null, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String cc, String bcc,
                           String subject, JsonArray attachments, String templateBody, JsonObject templateParams,
                           boolean translateSubject, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, getSenderEmail(), cc, bcc, subject, attachments, templateBody,
+        sendEmail(config, request, to, getSenderEmail(), cc, bcc, subject, attachments, templateBody,
                 templateParams, translateSubject, null, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String cc, String bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, JsonArray headers, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, getSenderEmail(), cc, bcc, subject, templateBody,
+        sendEmail(config, request, to, getSenderEmail(), cc, bcc, subject, templateBody,
                 templateParams, translateSubject, headers, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String from, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String from, String cc, String bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, from, cc, bcc, subject, templateBody,
+        sendEmail(config, request, to, from, cc, bcc, subject, templateBody,
                 templateParams, translateSubject, null, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String from, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String from, String cc, String bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, JsonArray headers, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, getSenderEmail(), cc, bcc, subject, null, templateBody,
+        sendEmail(config, request, to, getSenderEmail(), cc, bcc, subject, null, templateBody,
                 templateParams, translateSubject, headers, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, String to, String from, String cc, String bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, String to, String from, String cc, String bcc,
                           String subject, JsonArray attachments, String templateBody, JsonObject templateParams,
                           boolean translateSubject, JsonArray headers, final Handler<AsyncResult<Message<JsonObject>>> handler) {
         List<Object> toList = null;
@@ -150,28 +150,28 @@ public class PostgresEmailSender implements EmailSender {
             bccList.add(bcc);
         }
 
-        sendEmail(request, toList, getSenderEmail(), ccList, bccList, subject, attachments, templateBody,
+        sendEmail(config, request, toList, getSenderEmail(), ccList, bccList, subject, attachments, templateBody,
                 templateParams, translateSubject, headers, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, List<Object> to, List<Object> cc, List<Object> bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, List<Object> to, List<Object> cc, List<Object> bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, getSenderEmail(), cc, bcc, subject, templateBody,
+        sendEmail(config, request, to, getSenderEmail(), cc, bcc, subject, templateBody,
                 templateParams, translateSubject, null, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, List<Object> to, String from, List<Object> cc, List<Object> bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, List<Object> to, String from, List<Object> cc, List<Object> bcc,
                           String subject, String templateBody, JsonObject templateParams,
                           boolean translateSubject, JsonArray headers, final Handler<AsyncResult<Message<JsonObject>>> handler) {
-        sendEmail(request, to, from, cc, bcc, subject, null, templateBody,
+        sendEmail(config, request, to, from, cc, bcc, subject, null, templateBody,
                 templateParams, translateSubject, headers, handler);
     }
 
     @Override
-    public void sendEmail(HttpServerRequest request, List<Object> to, String from, List<Object> cc, List<Object> bcc,
+    public void sendEmail(JsonObject config, HttpServerRequest request, List<Object> to, String from, List<Object> cc, List<Object> bcc,
                           String subject, JsonArray attachments, String templateBody, JsonObject templateParams,
                           boolean translateSubject, JsonArray headers, final Handler<AsyncResult<Message<JsonObject>>> handler) {
         try {
@@ -192,7 +192,7 @@ public class PostgresEmailSender implements EmailSender {
             }
 
             if (translateSubject) {
-                mail.withSubject(I18n.getInstance().translate(
+                mail.withSubject(I18n.getInstance(config.getString("main")).translate(
                         subject, getHost(request), I18n.acceptLanguage(request)));
             } else {
                 mail.withSubject(subject);

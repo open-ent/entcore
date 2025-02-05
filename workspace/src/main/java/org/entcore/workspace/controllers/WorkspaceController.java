@@ -1502,7 +1502,7 @@ public class WorkspaceController extends BaseController {
 					notificationName = WorkspaceService.WORKSPACE_NAME.toLowerCase() + ".share-folder";
 					params.put("resourceUri", pathPrefix + "/workspace#/shared/folder/" + resource);
 					pushNotif.put("title", "push.notif.folder.share");
-					i18nPushNotifBody = user.getUsername() + " " + I18n.getInstance().translate(
+					i18nPushNotifBody = user.getUsername() + " " + I18n.getInstance(config.getString("main")).translate(
 							"workspace.shared.folder", getHost(request), I18n.acceptLanguage(request)) + " : ";
 				} else {
 					notificationName = WorkspaceService.WORKSPACE_NAME.toLowerCase() + ".share";
@@ -1513,16 +1513,16 @@ public class WorkspaceController extends BaseController {
 						params.put("resourceFolderName", DocumentHelper.getName(parent));
 					} else if (isShared) {
 						params.put("resourceFolderUri", pathPrefix + "/workspace#shared");
-						params.put("resourceFolderName", I18n.getInstance().translate("shared_tree", getHost(request),
+						params.put("resourceFolderName", I18n.getInstance(config.getString("main")).translate("shared_tree", getHost(request),
 								I18n.acceptLanguage(request)));
 					} else {
 						params.put("resourceFolderUri", pathPrefix + "/workspace");
-						params.put("resourceFolderName", I18n.getInstance().translate("documents", getHost(request),
+						params.put("resourceFolderName", I18n.getInstance(config.getString("main")).translate("documents", getHost(request),
 								I18n.acceptLanguage(request)));
 					}
 					params.put("resourceUri", pathPrefix + "/document/" + resource);
 					pushNotif.put("title", "push.notif.file.share");
-					i18nPushNotifBody = user.getUsername() + " " + I18n.getInstance().translate(
+					i18nPushNotifBody = user.getUsername() + " " + I18n.getInstance(config.getString("main")).translate(
 							"workspace.shared.document", getHost(request), I18n.acceptLanguage(request)) + " : ";
 				}
 				//

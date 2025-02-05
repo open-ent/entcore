@@ -22,6 +22,7 @@ import java.util.*;
 
 public class Neo4jRestClientCheckNotifier implements  Neo4jRestClientCheck{
     static final String NEO4J_CHANGE_EVENT = "NEO4J_CHANGE";
+    private final JsonObject neo4jConfig;
     private int nbCheck = 0;
     private final String hostName;
     private final EventStore eventStore;
@@ -37,6 +38,7 @@ public class Neo4jRestClientCheckNotifier implements  Neo4jRestClientCheck{
     private String moduleName;
 
     Neo4jRestClientCheckNotifier(final Vertx vertx, final JsonObject neo4jConfig){
+        this.neo4jConfig = neo4jConfig;
         final EventStoreFactory eventFac = EventStoreFactory.getFactory();
         eventFac.setVertx(vertx);
         eventStore = eventFac.getEventStore(BaseServer.getModuleName());
@@ -132,7 +134,7 @@ public class Neo4jRestClientCheckNotifier implements  Neo4jRestClientCheck{
                 if(this.beforeSendMail != null){
                     this.beforeSendMail.handle(null);
                 }
-                emailSender.sendEmail(null, emailAlertDest, null, null, subject, body.toString(), null, false, onSendMail);
+                emailSender.sendEmail(neo4jConfig, null, emailAlertDest, null, null, subject, body.toString(), null, false, onSendMail);
             }
         }
     }

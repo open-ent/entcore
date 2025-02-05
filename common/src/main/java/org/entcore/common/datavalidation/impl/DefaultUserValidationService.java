@@ -93,9 +93,9 @@ public class DefaultUserValidationService implements UserValidationService {
                     // Generate email subject
                     final JsonObject timelineI18n = (requestThemeKV == null ? getThemeDefaults() : requestThemeKV).getOrDefault(I18n.acceptLanguage(request).split(",")[0].split("-")[0], new JsonObject());
                     final String title = timelineI18n.getString("timeline.immediate.mail.subject.header", "")
-                            + I18n.getInstance().translate("mobile.update.warning.subject", getHost(request), I18n.acceptLanguage(request));
+                            + I18n.getInstance(config.getString("main")).translate("mobile.update.warning.subject", getHost(request), I18n.acceptLanguage(request));
 
-                    emailSender.sendEmail(
+                    emailSender.sendEmail(config,
                             request,
                             email,
                             null,
@@ -169,6 +169,7 @@ public class DefaultUserValidationService implements UserValidationService {
             } else {
                 processEmailTemplate(request, templateParams, templateName, false, processedTemplate -> {
                     emailSender.sendEmail(
+                            config,
                             request,
                             to,
                             null,

@@ -44,7 +44,6 @@ public class Validator {
 	private static final Logger log = LoggerFactory.getLogger(Validator.class);
 	private static Map<Object, Object> logins;
 	private static Map<Object, Object> invalidEmails;
-	private final I18n i18n = I18n.getInstance();
 	private final boolean notStoreLogins;
 	private static final String[] alphabet =
 			{"a","b","c","d","e","f","g","h","j","k","m","n","p","r","s","t","v","w","x","y","z","3","4","5","6","7","8","9"};
@@ -109,7 +108,7 @@ public class Validator {
 	// errorsContext param is usefull to pass (by reference) all informations to render an acurate report for CSV feeding
 	public String validate(JsonObject object, String acceptLanguage, boolean conserveChildAttributes, JsonArray errorsContext) {
 		if (object == null) {
-			return i18n.translate("null.object", I18n.DEFAULT_DOMAIN, acceptLanguage);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("null.object", I18n.DEFAULT_DOMAIN, acceptLanguage);
 		}
 		final StringBuilder calcChecksum = new StringBuilder();
 		final Set<String> attributes = new HashSet<>(object.fieldNames());
@@ -143,7 +142,7 @@ public class Validator {
 						}
 						break;
 					default:
-						err = i18n.translate("missing.type.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, type);
+						err = I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.type.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, type);
 				}
 				if (errorsContext != null && errorsContext.size() > 0) {
 					continue;
@@ -293,8 +292,8 @@ public class Validator {
 							.put("errorLevel", "hard")
 					);
 				}
-				res = i18n.translate("missing.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage,
-						"", i18n.translate(o.toString(), I18n.DEFAULT_DOMAIN, acceptLanguage));
+				res = I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage,
+						"", I18n.getInstance("org.entcore.feeder.Feeder").translate(o.toString(), I18n.DEFAULT_DOMAIN, acceptLanguage));
 			}
 		}
 		return res;
@@ -480,7 +479,7 @@ public class Validator {
 
 	private String validBoolean(String attr, Object value, String acceptLanguage) {
 		if (!(value instanceof Boolean)) {
-			return i18n.translate("invalid.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
 		}
 		return null;
 	}
@@ -491,23 +490,23 @@ public class Validator {
 
 	private String validStringArray(String attr, Object value, String validator, String acceptLanguage) {
 		if (validator == null) {
-			return i18n.translate("null.array.validator", I18n.DEFAULT_DOMAIN, acceptLanguage);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("null.array.validator", I18n.DEFAULT_DOMAIN, acceptLanguage);
 		}
 		if (!(value instanceof JsonArray)) {
-			return i18n.translate("invalid.array.type", I18n.DEFAULT_DOMAIN, acceptLanguage, attr,
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.array.type", I18n.DEFAULT_DOMAIN, acceptLanguage, attr,
 					value != null ? value.getClass().getSimpleName() : "null");
 		}
 		String err = null;
 		switch (validator) {
 			case "notEmpty" :
 				if (!(((JsonArray) value).size() > 0)) {
-					err = i18n.translate("empty.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
+					err = I18n.getInstance("org.entcore.feeder.Feeder").translate("empty.attribute", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
 				}
 				break;
 			case "nop":
 				break;
 			default:
-				err =  i18n.translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
+				err =  I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
 		}
 		return err;
 	}
@@ -529,7 +528,7 @@ public class Validator {
 				p = patterns.get(validator.substring(6));
 			}
 			if (p == null) {
-				return i18n.translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
+				return I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
 			}
 		}
 		// hack #16883
@@ -539,7 +538,7 @@ public class Validator {
 		if (value instanceof String && p.matcher((String) value).matches()) {
 			if ("email".equals(validator) && !"emailAcademy".equals(attr) &&
 					invalidEmails != null && invalidEmails.containsKey(value)) {
-				return i18n.translate("invalid.bounce.email", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (String) value);
+				return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.bounce.email", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (String) value);
 			}
 			return null;
 		} else {
@@ -553,7 +552,7 @@ public class Validator {
 							.put("value", (value != null ? value.toString() : "null"))
 					);
 				}
-				return i18n.translate("invalid.value", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
+				return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.value", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
 			}
 		}
 	}
@@ -562,44 +561,40 @@ public class Validator {
 		return validLoginAlias(attr, value, validator, "fr");
 	}
 
-	private String validLoginAlias(String attr, Object value, String validator, String acceptLanguage) {
-		return validLoginAlias(attr, value, validator, acceptLanguage, i18n);
-	}
-
-	public static String validLoginAlias(String attr, Object value, String validator, String acceptLanguage, I18n i18n) {
+	public static String validLoginAlias(String attr, Object value, String validator, String acceptLanguage) {
 		Pattern p = patterns.get(validator);
 		if (p == null) {
-			return i18n.translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
 		}
 		if (!p.matcher((String) value).find()) {
-			return i18n.translate("invalid.value", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.value", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
 		}
 
 		if (logins.putIfAbsent(value, "") != null) {
-			return i18n.translate("invalid.duplicate", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.duplicate", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
 		}
 
 		if (value.toString().length() > 64) {
-			return i18n.translate("invalid.maxSize", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"), "64");
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.maxSize", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"), "64");
 		}
 		return null;
 	}
 
-	public static String validAdLoginAlias(String attr, Object value, String validator, String acceptLanguage, I18n i18n, Boolean checkDuplicate) {
+	public static String validAdLoginAlias(String attr, Object value, String validator, String acceptLanguage, Boolean checkDuplicate) {
 		Pattern p = patterns.get(validator);
 		if (p == null) {
-			return i18n.translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("missing.validator", I18n.DEFAULT_DOMAIN, acceptLanguage, validator);
 		}
 		if (!p.matcher((String) value).find()) {
-			return i18n.translate("invalid.aliasAd", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.aliasAd", I18n.DEFAULT_DOMAIN, acceptLanguage, attr);
 		}
 
 		if (checkDuplicate) {
-			if (logins.putIfAbsent(value, "") != null) return i18n.translate("invalid.duplicate", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
+			if (logins.putIfAbsent(value, "") != null) return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.duplicate", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"));
 		}
 
 		if (value.toString().length() > 20) {
-			return i18n.translate("invalid.maxSize", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"), "20");
+			return I18n.getInstance("org.entcore.feeder.Feeder").translate("invalid.maxSize", I18n.DEFAULT_DOMAIN, acceptLanguage, attr, (value != null ? value.toString() : "null"), "20");
 		}
 		return null;
 	}
@@ -609,14 +604,10 @@ public class Validator {
 		return validLogin(loginValue, "fr");
 	}
 
+
 	public static String validLogin(String loginValue, String acceptLanguage)
 	{
-		return validLogin(loginValue, acceptLanguage, I18n.getInstance());
-	}
-
-	public static String validLogin(String loginValue, String acceptLanguage, I18n i18n)
-	{
-		return validLoginAlias("login", loginValue, "loginAlias", acceptLanguage, i18n);
+		return validLoginAlias("login", loginValue, "loginAlias", acceptLanguage);
 	}
 
 	public String getType(String attr) {

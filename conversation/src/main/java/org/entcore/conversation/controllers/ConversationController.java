@@ -1513,7 +1513,7 @@ public class ConversationController extends BaseController {
 		final FileSystem fs = vertx.fileSystem();
 		final List<String> fileIds = new ArrayList<>();
 		final JsonObject aliasFileName = new JsonObject();
-		final String zipDownloadName = I18n.getInstance().translate("attachments", I18n.DEFAULT_DOMAIN, I18n.acceptLanguage(request)) + ".zip";
+		final String zipDownloadName = I18n.getInstance(config.getString("main")).translate("attachments", I18n.DEFAULT_DOMAIN, I18n.acceptLanguage(request)) + ".zip";
 		final String zipDirectory = exportPath + File.separator + UUID.randomUUID().toString();
 
 		for(Object file : files){

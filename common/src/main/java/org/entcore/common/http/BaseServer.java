@@ -109,7 +109,7 @@ public abstract class BaseServer extends Server {
 
 		repositoryHandler = new RepositoryHandler(getEventBus(vertx));
 		searchingHandler = new SearchingHandler(getEventBus(vertx));
-		i18nHandler = new I18nHandler();
+		i18nHandler = new I18nHandler(config);
 
 		Config.getInstance().setConfig(config);
 
@@ -341,7 +341,7 @@ public abstract class BaseServer extends Server {
 						public void handle(AsyncResult<List<String>> asyncResult) {
 							if (asyncResult.succeeded()) {
 								List<String> files = asyncResult.result();
-								final I18n i18n = I18n.getInstance();
+								final I18n i18n = I18n.getInstance(config.getString("main"));
 								for (final String s : files) {
 									final Locale locale = Locale.forLanguageTag(
 											s.substring(s.lastIndexOf(File.separatorChar) + 1, s.lastIndexOf('.')));

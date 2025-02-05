@@ -413,7 +413,7 @@ public class DefaultTimetableService implements TimetableService {
 
 					if (!("EDT".equals(ttType) && !path.endsWith("\\.xml")) &&
 							!("UDT".equals(ttType) && !path.endsWith("\\.zip"))) {
-						errors.add(I18n.getInstance().translate("invalid.import.format", domain, acceptLanguage));
+						errors.add(I18n.getInstance("org.entcore.directory.Directory").translate("invalid.import.format", domain, acceptLanguage));
 						handler.handle(new Either.Left<JsonObject, JsonObject>(ge));
 						return;
 					}
@@ -421,7 +421,7 @@ public class DefaultTimetableService implements TimetableService {
 					callTimetableImport(event.right().getValue().getString("UAI"), ttType, isPunctual,
 										groupsOnly, automaticMode, path, acceptLanguage, handler);
 				} else {
-					errors.add(I18n.getInstance().translate("invalid.structure", domain, acceptLanguage));
+					errors.add(I18n.getInstance("org.entcore.directory.Directory").translate("invalid.structure", domain, acceptLanguage));
 					handler.handle(new Either.Left<JsonObject, JsonObject>(ge));
 				}
 			}
@@ -478,7 +478,7 @@ public class DefaultTimetableService implements TimetableService {
 				}
 				else
 				{
-					errors.add(I18n.getInstance().translate("invalid.structure", domain, acceptLanguage));
+					errors.add(I18n.getInstance("org.entcore.directory.Directory").translate("invalid.structure", domain, acceptLanguage));
 					handler.handle(new Either.Left<JsonObject, JsonObject>(ge));
 				}
 			}

@@ -71,7 +71,7 @@ public final class TimelineLambda {
 				}
 
 				// #46383, translations from the theme takes precedence over those from the domain
-				String translatedContents = I18n.getInstance().translate(key, Renders.getHost(request), I18n.getTheme(request), I18n.getLocale(language));
+				String translatedContents = I18n.getInstance("org.entcore.timeline.Timeline").translate(key, Renders.getHost(request), I18n.getTheme(request), I18n.getLocale(language));
 				if (translatedContents.equals(key)) {
 					translatedContents = timelineI18n.getString(key, key);
 				}

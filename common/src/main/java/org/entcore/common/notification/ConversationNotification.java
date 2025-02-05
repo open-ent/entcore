@@ -39,16 +39,17 @@ import static fr.wseduc.webutils.Utils.handlerToAsyncHandler;
 
 public class ConversationNotification {
 
-	private final I18n i18n = I18n.getInstance();
 	private final Renders render;
 	private final Neo neo;
 	private final String host;
 	private final EventBus eb;
+	private final JsonObject config;
 	private static final Logger log = LoggerFactory.getLogger(TimelineHelper.class);
 	private static final String CONVERSATION_ADDRESS = "org.entcore.conversation";
 
 	public ConversationNotification(Vertx vertx, EventBus eb, JsonObject config) {
 		this.render = new Renders(vertx, config);
+		this.config = config;
 		this.neo = new Neo(vertx, eb, log);
 		this.eb = eb;
 		this.host = config.getString("host", "http://localhost:8009");
@@ -62,7 +63,7 @@ public class ConversationNotification {
 			public void handle(String message) {
 				if (message != null) {
 					ConversationNotification.this.notify(request, from, to, cc,
-							i18n.translate(subject, Renders.getHost(request), I18n.acceptLanguage(request)),
+							I18n.getInstance(config.getString("main")).translate(subject, Renders.getHost(request), I18n.acceptLanguage(request)),
 							message, result);
 				} else {
 					log.error("Unable to send conversation notification.");
@@ -93,7 +94,7 @@ public class ConversationNotification {
 			String[] langs = language.split(",");
 			language = langs[0];
 		}
-		String displayName = i18n.translate("no-reply", Renders.getHost(request), language);
+		String displayName = I18n.getInstance(config.getString("main")).translate("no-reply", Renders.getHost(request), language);
 		final JsonObject m = new JsonObject()
 				.put("message", new JsonObject()
 					.put("to", to)

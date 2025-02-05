@@ -504,7 +504,7 @@ public class FileSystemExportService implements ExportService {
 							subject = "email.export.ko";
 							template = "email/export.ko.html";
 						}
-						notification.sendEmail(r, email, null, null, subject, template, p, true,
+						notification.sendEmail(new JsonObject().put("main", "org.entcore.archive.Archive"), r, email, null, null, subject, template, p, true,
 								handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
 							@Override
 							public void handle(Message<JsonObject> event) {

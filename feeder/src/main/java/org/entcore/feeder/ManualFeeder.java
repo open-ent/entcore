@@ -871,7 +871,7 @@ public class ManualFeeder extends BusModBase {
 							if (updatedLoginAlias.equals(((JsonObject) o).getString("login"))) {
 								user.putNull("loginAlias");
 							} else if (useLoginAliasValidatorForAD) {
-								error = Validator.validAdLoginAlias("loginAlias", updatedLoginAlias, "AdLoginAlias", "fr", I18n.getInstance(), false);
+								error = Validator.validAdLoginAlias("loginAlias", updatedLoginAlias, "AdLoginAlias", "fr", false);
 							}
 						}
 

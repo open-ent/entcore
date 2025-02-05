@@ -144,7 +144,7 @@ public class DefaultTimelineMailerService extends Renders implements TimelineMai
 									public void handle(JsonArray translations) {
 										for(final String userId : toByDomainLang.get(domain).get(lang).keySet()) {
 											//Send mail containing the "immediate" notification
-											emailSender.sendEmail(request,
+											emailSender.sendEmail(config, request,
 													Arrays.asList(toByDomainLang.get(domain).get(lang).get(userId)),
 													null,
 													null,
@@ -252,7 +252,7 @@ public class DefaultTimelineMailerService extends Renders implements TimelineMai
 		} else {
 			timelineI18n = new JsonObject("{" + i18n.substring(0, i18n.length() - 1) + "}");
 		}
-		timelineI18n.mergeIn(I18n.getInstance().load(language, domain));
+		timelineI18n.mergeIn(I18n.getInstance(config.getString("main")).load(language, domain));
 		JsonArray translations = new JsonArray();
 		for(Object keyObj : i18nKeys){
 			String key = (String) keyObj;
@@ -421,7 +421,7 @@ public class DefaultTimelineMailerService extends Renders implements TimelineMai
 															translateTimeline(keys, userDomain, userLanguage, new Handler<JsonArray>() {
 																public void handle(JsonArray translations) {
 																	//Send mail containing the "daily" notifications
-																	emailSender.sendEmail(request,
+																	emailSender.sendEmail(config, request,
 																			userPrefs.getString("userMail", ""),
 																			null,
 																			null,
@@ -652,7 +652,7 @@ public class DefaultTimelineMailerService extends Renders implements TimelineMai
 															translateTimeline(keys, userDomain, userLanguage, new Handler<JsonArray>() {
 																public void handle(JsonArray translations) {
 																	//Send mail containing the "weekly" notifications
-																	emailSender.sendEmail(request,
+																	emailSender.sendEmail(config, request,
 																			userPrefs.getString("userMail", ""),
 																			null,
 																			null,

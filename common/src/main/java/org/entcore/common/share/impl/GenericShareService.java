@@ -62,7 +62,7 @@ public abstract class GenericShareService implements ShareService {
 	protected final EventBus eb;
 	protected final Map<String, SecuredAction> securedActions;
 	protected final Map<String, List<String>> groupedActions;
-	protected static final I18n i18n = I18n.getInstance();
+
 	private JsonArray resourceActions;
 	private final Vertx vertx = Vertx.currentContext().owner();
 	private final int DEFAULT_SHARES_PARTITION_SIZE = 50;

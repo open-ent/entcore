@@ -51,7 +51,6 @@ import io.vertx.core.logging.LoggerFactory;
 public class WorkspaceSearchingEvents implements SearchingEvents {
 	private static final Logger log = LoggerFactory.getLogger(WorkspaceSearchingEvents.class);
 	private final FolderManager folderManager;
-	private static final I18n i18n = I18n.getInstance();
 	private static final String PATTERN = "yyyy-MM-dd HH:mm.ss.sss";
 
 	public WorkspaceSearchingEvents(FolderManager folderManager) {
@@ -164,10 +163,10 @@ public class WorkspaceSearchingEvents implements SearchingEvents {
 					}
 					// fix i18 description
 					if (commentsMatching.size() == 1) {
-						description = i18n.translate("workspace.search.description.one", I18n.DEFAULT_DOMAIN, locale,
+						description = I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.search.description.one", I18n.DEFAULT_DOMAIN, locale,
 								description);
 					} else if (commentsMatching.size() > 1) {
-						description = i18n.translate("workspace.search.description.several", I18n.DEFAULT_DOMAIN,
+						description = I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.search.description.several", I18n.DEFAULT_DOMAIN,
 								locale, commentsMatching.size() + "", description);
 					}
 					//

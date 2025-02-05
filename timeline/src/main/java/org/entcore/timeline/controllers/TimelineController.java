@@ -103,7 +103,7 @@ public class TimelineController extends BaseController {
 	private JsonArray eventTypes; // cache to improve perfs
 	private boolean refreshTypesCache;
 	private NotificationHelper notificationHelper;
-	protected I18n i18n = I18n.getInstance();
+
 
 	// TEMPORARY to handle both timeline and timeline2 view
 	private String defaultSkin;
@@ -160,7 +160,7 @@ public class TimelineController extends BaseController {
 		final JsonArray list = new JsonArray();
 		final JsonObject res = new JsonObject();
 		final JsonObject first = new JsonObject();
-		final String msg = I18n.getInstance().translate(messageKey, getHost(request), I18n.acceptLanguage(request));
+		final String msg = I18n.getInstance(config.getString("main")).translate(messageKey, getHost(request), I18n.acceptLanguage(request));
 		first.put("date", new JsonObject().put("$date", System.currentTimeMillis()));
 		first.put("event-type", "");
 		first.put("message", msg);
@@ -236,7 +236,7 @@ public class TimelineController extends BaseController {
 		final JsonObject i18Notif = new JsonObject(
 			"{" + i18n.substring(0, i18n.length() - 1) + "}");
 		if("true".equals(request.params().get("mergeall"))){
-			final JsonObject original = this.i18n.load(request);
+			final JsonObject original = I18n.getInstance(config.getString("main")).load(request);
 			renderJson(request, i18Notif.mergeIn(original));
 		}else{
 			renderJson(request, i18Notif);

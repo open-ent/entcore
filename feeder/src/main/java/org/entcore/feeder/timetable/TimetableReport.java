@@ -211,7 +211,7 @@ public class TimetableReport {
       this.templator = new FileTemplateProcessor(vertx, config.getString("main"), "template");
       this.templator.escapeHTML(false);
 
-      this.templator.setLambda("i18n", new I18nLambda(locale));
+      this.templator.setLambda("i18n", new I18nLambda(config.getString("main"), locale));
       this.templator.setLambda("datetime", new LocaleDateLambda(locale));
 
       TimetableReport.templateProcessors.put(vertx, this.templator);

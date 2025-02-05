@@ -998,7 +998,7 @@ public class User {
 			if (value == null || isEmpty(value.toString())) {
 				j.remove(s);
 			} else if (("login".equals(s) || "loginAlias".equals(s)) &&
-					Validator.validLoginAlias(s, j.getString(s), "loginAlias", "fr", I18n.getInstance()) != null)
+					Validator.validLoginAlias(s, j.getString(s), "loginAlias", "fr") != null)
 			{
 				oldLogin.put(s, j.getString(s));
 				j.remove(s);
@@ -1087,7 +1087,7 @@ public class User {
 							log.info("Update user " + u.encode() + " login");
 
 							JsonObject params = new JsonObject().put("name", j.getString("displayName", "")).put("login", login);
-							emailSender.sendEmail(forged, email, null, null,
+							emailSender.sendEmail(new JsonObject().put("main", "org.entcore.feeder.Feeder"), forged, email, null, null,
 									"remote.user.update.login.mail", "email/update-user-login.html", params, true,
 									new Handler<AsyncResult<Message<JsonObject>>>()
 									{

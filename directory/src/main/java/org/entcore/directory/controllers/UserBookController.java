@@ -447,7 +447,7 @@ public class UserBookController extends BaseController {
 		final String theme = message.body().getString("theme");
 		final JsonObject headers = message.body().getJsonObject("request", new JsonObject()).getJsonObject("headers", new JsonObject());
 		final String defaultLanguage = userBookData.getString("default-language", "fr");
-		final JsonArray languages = I18n.getInstance().getLanguages(headers.getString("Host"));
+		final JsonArray languages = I18n.getInstance(config.getString("main")).getLanguages(headers.getString("Host"));
 		final String lang = headers.getString("Accept-Language", defaultLanguage);
 		final String locale = Locale.forLanguageTag(lang.split(",")[0].split("-")[0]).toString();
 		final String localeAvailable = (languages.contains(locale)) ? locale : defaultLanguage;
@@ -469,7 +469,7 @@ public class UserBookController extends BaseController {
 				}
 				if (welcomeMessage != null) {
 					conversationNotification.notify(request, "", new JsonArray().add(message.body().getString("userId")),
-							null, I18n.getInstance().translate("welcome.subject", getHost(request), I18n.acceptLanguage(request)),
+							null, I18n.getInstance(config.getString("main")).translate("welcome.subject", getHost(request), I18n.acceptLanguage(request)),
 							welcomeMessage, new Handler<Either<String, JsonObject>>() {
 
 								@Override

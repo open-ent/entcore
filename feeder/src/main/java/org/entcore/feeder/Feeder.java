@@ -238,7 +238,7 @@ public class Feeder extends BusModBase implements Handler<Message<JsonObject>> {
 				}
 			}
 		}
-		I18n.getInstance().init(vertx, config);
+		I18n.getInstance(config.getString("main")).init(vertx, config);
 		validatorFactory = new ValidatorFactory(vertx);
 	}
 

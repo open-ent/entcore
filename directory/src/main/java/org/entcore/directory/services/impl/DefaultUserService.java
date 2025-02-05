@@ -146,7 +146,7 @@ public class DefaultUserService implements UserService {
 							.put("host", notification.getHost(request))
 							.put("login", login);
 					logger.debug(json.encode());
-					notification.sendEmail(request, email, null, null,
+					notification.sendEmail(new JsonObject().put("main", "org.entcore.directory.Directory"), request, email, null, null,
 							"email.user.created.info", "email/userCreated.html", json, true,
 							new Handler<AsyncResult<Message<JsonObject>>>() {
 

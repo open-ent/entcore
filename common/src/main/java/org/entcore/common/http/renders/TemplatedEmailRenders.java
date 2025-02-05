@@ -219,7 +219,7 @@ public abstract class TemplatedEmailRenders extends Renders {
 				};
 
 				// #46383, translations from the theme takes precedence over those from the domain
-				final String translatedContents = I18n.getInstance().translate(key, Renders.getHost(request), I18n.getTheme(request), I18n.getLocale(language));
+				final String translatedContents = I18n.getInstance(config.getString("main")).translate(key, Renders.getHost(request), I18n.getTheme(request), I18n.getLocale(language));
 				if (!translatedContents.equals(key)) {
 					Mustache.compiler().compile(translatedContents).execute(innerCtx, out);
 				} else {
@@ -241,7 +241,7 @@ public abstract class TemplatedEmailRenders extends Renders {
 	protected Future<String> formatEmailSubject(HttpServerRequest request, String i18nKey, JsonObject parameters) {
 		return getProjectNameFromTimelineI18n(request).compose( projectName -> {
 			parameters.put("projectName", projectName);
-			final String initialValue = I18n.getInstance().translate(i18nKey, getHost(request), I18n.acceptLanguage(request));
+			final String initialValue = I18n.getInstance(config.getString("main")).translate(i18nKey, getHost(request), I18n.acceptLanguage(request));
 			return processEmailTemplate(request, parameters, initialValue, true);
 		});
 	}

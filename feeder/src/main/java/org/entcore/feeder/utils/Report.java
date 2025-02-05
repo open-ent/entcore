@@ -57,7 +57,7 @@ public class Report {
 	private static final String MAPPINGS = "mappings";
 	public static final String KEYS_CLEANED = "keysCleaned";
 	public final JsonObject result;
-	private final I18n i18n = I18n.getInstance();
+
 	public final String acceptLanguage;
 	private long endTime;
 	private long startTime;
@@ -98,7 +98,7 @@ public class Report {
 			f = new JsonArray();
 			result.getJsonObject("errors").put(file, f);
 		}
-		String error = i18n.translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errors);
+		String error = I18n.getInstance("org.entcore.feeder.Feeder").translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errors);
 		props.put("error", error);
 		f.add(props);
 		log.error(error + " :\n" + Arrays.asList(props));
@@ -111,7 +111,7 @@ public class Report {
 			f = new JsonArray();
 			result.getJsonObject("errors").put(file, f);
 		}
-		String error = i18n.translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errors);
+		String error = I18n.getInstance("org.entcore.feeder.Feeder").translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errors);
 		f.add(error);
 		log.error(error);
 	}
@@ -151,7 +151,7 @@ public class Report {
 
 		List<String> errorContext = new ArrayList<>(Arrays.asList(errors)); // Hack to support "add" operation
 		errorContext.add(0, lineNumber);
-		String translation = i18n.translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errorContext.toArray(new String[errorContext.size()]));
+		String translation = I18n.getInstance("org.entcore.feeder.Feeder").translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, errorContext.toArray(new String[errorContext.size()]));
 		error.put("translation", translation);
 
 		fileErrors.add(error);
@@ -187,7 +187,7 @@ public class Report {
 	}
 
 	public String translate(String key, String... params) {
-		return i18n.translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, params);
+		return I18n.getInstance("org.entcore.feeder.Feeder").translate(key, I18n.DEFAULT_DOMAIN, acceptLanguage, params);
 	}
 
 	public JsonObject getResult() {
@@ -365,12 +365,12 @@ public class Report {
 			final JsonObject result) {
 		final JsonObject reqParams = new JsonObject().put("headers",
 				new JsonObject().put("Accept-Language", acceptLanguage));
-		emailFactory.getSender().sendEmail(new JsonHttpServerRequest(reqParams),
+		emailFactory.getSender().sendEmail(new JsonObject().put("main", "org.entcore.feeder.Feeder"),new JsonHttpServerRequest(reqParams),
 				sendReport.getJsonArray("to").getList(),
 				sendReport.getJsonArray("cc") != null ? sendReport.getJsonArray("cc").getList() : null,
 				sendReport.getJsonArray("bcc") != null ? sendReport.getJsonArray("bcc").getList() : null,
 				sendReport.getString("project", "")
-						+ i18n.translate("import.report", I18n.DEFAULT_DOMAIN, acceptLanguage) + " - "
+						+ I18n.getInstance("org.entcore.feeder.Feeder").translate("import.report", I18n.DEFAULT_DOMAIN, acceptLanguage) + " - "
 						+ DateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd")),
 				"email/report.html", result, false, ar -> {
 					if (ar.failed()) {

@@ -32,6 +32,13 @@ import io.vertx.core.json.JsonObject;
  * @deprecated when current (2024-09) i18n implementation will be refactored.
  */
 public class I18nHandler implements Handler<Message<JsonObject>> {
+
+	private final JsonObject config;
+
+	public I18nHandler(JsonObject config) {
+		this.config = config;
+	}
+
 	@Override
 	public void handle(final Message<JsonObject> message) {
 		final JsonObject translations = new JsonObject();
@@ -42,7 +49,7 @@ public class I18nHandler implements Handler<Message<JsonObject>> {
 			final Locale locale = request.getLocale();
 			final String[] args = request.getArgs();
 			for( String key : request.getKeys()) {
-				translations.put(key, I18n.getInstance().translate(
+				translations.put(key, I18n.getInstance(config.getString("main")).translate(
 					key, domain, theme, locale, args));
 			}
 		}

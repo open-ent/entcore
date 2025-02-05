@@ -26,7 +26,6 @@ import static org.entcore.common.http.response.DefaultResponseHandler.*;
 public class SlotProfileController extends MongoDbControllerHelper {
 
     private SlotProfileService slotProfileService;
-    private static final I18n i18n = I18n.getInstance();
 
 
     public SlotProfileController(String collection) {
@@ -117,7 +116,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                 if (event.isRight()) {
                     JsonArray value = event.right().getValue();
                     if (!newSlotProfileNameCanByUsed(value, slotProfile)) {
-                        String errorMessage = i18n.translate(
+                        String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                 "directory.slot.bad.request.profile.already.exists",
                                 Renders.getHost(request),
                                 I18n.acceptLanguage(request));
@@ -156,7 +155,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                             Long slotStart = slot.getStart();
                             Long slotEnd = slot.getEnd();
                             if (slotStart == null || slotEnd == null) {
-                                String errorMessage = i18n.translate(
+                                String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                         "directory.slot.bad.request.format.hours.invalid",
                                         Renders.getHost(request),
                                         I18n.acceptLanguage(request));
@@ -164,7 +163,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                 return;
                             }
                             if (slotStart >= slotEnd) {
-                                String errorMessage = i18n.translate(
+                                String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                         "directory.slot.bad.request.invalid.hours",
                                         Renders.getHost(request),
                                         I18n.acceptLanguage(request));
@@ -180,7 +179,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                         JsonObject value = event.right().getValue();
                                         JsonArray existingSlots = value.getJsonArray("slots");
                                         if (slotNameAlreadyExists(existingSlots, slot)) {
-                                            String errorMessage = i18n.translate(
+                                            String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                                     "directory.slot.bad.request.slot.name.already.exists",
                                                     Renders.getHost(request),
                                                     I18n.acceptLanguage(request));
@@ -189,7 +188,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                         }
                                         // check no overlapping
                                         if (overlapAnotherSlot(existingSlots, slot)) {
-                                            String errorMessage = i18n.translate(
+                                            String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                                     "directory.slot.bad.request.slot.overlap",
                                                     Renders.getHost(request),
                                                     I18n.acceptLanguage(request));
@@ -233,7 +232,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                             Long slotStart = slot.getStart();
                             Long slotEnd = slot.getEnd();
                             if (slotStart == null || slotEnd == null) {
-                                String errorMessage = i18n.translate(
+                                String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                         "directory.slot.bad.request.format.hours.invalid",
                                         Renders.getHost(request),
                                         I18n.acceptLanguage(request));
@@ -241,7 +240,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                 return;
                             }
                             if (slotStart >= slotEnd) {
-                                String errorMessage = i18n.translate(
+                                String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                         "directory.slot.bad.request.invalid.hours",
                                         Renders.getHost(request),
                                         I18n.acceptLanguage(request));
@@ -256,7 +255,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                         JsonObject value = event.right().getValue();
                                         JsonArray existingSlots = value.getJsonArray("slots");
                                         if (slotNameAlreadyExists(existingSlots, slot)) {
-                                            String errorMessage = i18n.translate(
+                                            String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                                     "directory.slot.bad.request.slot.name.already.exists",
                                                     Renders.getHost(request),
                                                     I18n.acceptLanguage(request));
@@ -265,7 +264,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
                                         }
                                         // check no overlapping
                                         if (overlapAnotherSlot(existingSlots, slot)) {
-                                            String errorMessage = i18n.translate(
+                                            String errorMessage = I18n.getInstance(config.getString("main")).translate(
                                                     "directory.slot.bad.request.slot.overlap",
                                                     Renders.getHost(request),
                                                     I18n.acceptLanguage(request));
@@ -377,7 +376,7 @@ public class SlotProfileController extends MongoDbControllerHelper {
     public void listSlotProfilesBySchool(HttpServerRequest request) {
         final String structureId = request.params().get("schoolId");
         if (structureId == null) {
-            String errorMessage = i18n.translate(
+            String errorMessage = I18n.getInstance(config.getString("main")).translate(
                     "directory.slot.bad.request.invalid.structure",
                     Renders.getHost(request),
                     I18n.acceptLanguage(request));

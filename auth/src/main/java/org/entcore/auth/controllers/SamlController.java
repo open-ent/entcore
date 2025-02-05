@@ -554,7 +554,7 @@ public class SamlController extends AbstractFederateController {
 			final JsonObject context = new JsonObject();
 			if (error != null && !error.trim().isEmpty()) {
 				context.put("error", new JsonObject()
-						.put("message", I18n.getInstance().translate(error, getHost(request), I18n.acceptLanguage(request))));
+						.put("message", I18n.getInstance(config.getString("main")).translate(error, getHost(request), I18n.acceptLanguage(request))));
 			}
 			context.put("notLoggedIn", true);
 			renderView(request, context, "login.html", null);

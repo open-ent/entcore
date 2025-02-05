@@ -467,7 +467,7 @@ public class PortalController extends BaseController {
 				String label = message.body().getString("label");
 				String acceptLanguage = message.body().getString("acceptLanguage");
 
-				JsonObject i18n = I18n.getInstance().load(acceptLanguage, I18n.DEFAULT_DOMAIN);
+				JsonObject i18n = I18n.getInstance(config.getString("main")).load(acceptLanguage, I18n.DEFAULT_DOMAIN);
 
 				if(label == null)
 					message.reply(i18n);

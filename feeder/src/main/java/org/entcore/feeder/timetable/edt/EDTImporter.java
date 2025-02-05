@@ -732,7 +732,7 @@ public class EDTImporter extends AbstractTimetableImporter implements EDTReader 
 	}
 
 	public static void launchImport(Vertx vertx, JsonObject config, Storage storage, EDTUtils edtUtils, final String mode, final Message<JsonObject> message, final PostImport postImport, boolean edtUserCreation, Long forceDateTimestamp) {
-		final I18n i18n = I18n.getInstance();
+		final I18n i18n = I18n.getInstance("org.entcore.feeder.Feeder");
 		final String acceptLanguage = message.body().getString("language", "fr");
 		if (edtUtils == null) {
 			JsonObject json = new JsonObject().put("status", "error").put("message",

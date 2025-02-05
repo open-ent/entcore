@@ -144,7 +144,7 @@ public class WorkspaceRepositoryEvents implements RepositoryEvents {
 
 		final String exportPath = exportPathOrig + File.separator + "Documents_tmp";
 		final String finalExportPath = exportPathOrig + File.separator +
-				I18n.getInstance().translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
+				I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
 
 		exportDocs(exportPath, exportDocuments, locale, queries, new JsonArray(), new Handler<Boolean>() {
 			@Override
@@ -217,7 +217,7 @@ public class WorkspaceRepositoryEvents implements RepositoryEvents {
 	{
 		if (queries.isEmpty())
 		{
-			String filePath = exportPath + File.separator + I18n.getInstance().translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
+			String filePath = exportPath + File.separator + I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
 			Handler<AsyncResult<Void>> finish = new Handler<AsyncResult<Void>>()
 			{
 				@Override
@@ -249,7 +249,7 @@ public class WorkspaceRepositoryEvents implements RepositoryEvents {
 			String folder = entry.getKey();
 			JsonObject query = entry.getValue();
 			queries.remove(folder);
-			final String translatedFolder = StringUtils.stripAccents(I18n.getInstance().translate(folder, I18n.DEFAULT_DOMAIN, locale));
+			final String translatedFolder = StringUtils.stripAccents(I18n.getInstance("org.entcore.workspace.Workspace").translate(folder, I18n.DEFAULT_DOMAIN, locale));
 			final String exportPathFolder = exportPath + File.separator + translatedFolder;
 
 			mongo.find(DocumentDao.DOCUMENTS_COLLECTION, query, new Handler<Message<JsonObject>>()
@@ -311,7 +311,7 @@ public class WorkspaceRepositoryEvents implements RepositoryEvents {
 	{
 		WorkspaceRepositoryEvents self = this;
 
-		final String backupPath = importPath + File.separator + I18n.getInstance().translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
+		final String backupPath = importPath + File.separator + I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.title", I18n.DEFAULT_DOMAIN, locale);
 		FolderImporterContext context = new FolderImporterContext(importPath, userId, userName);
 		context.setSkipDocumentImport(skipDocs);
 

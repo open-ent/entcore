@@ -82,7 +82,7 @@ public class FolderImporterZip {
     }
 
     public static Future<FolderImporterZipContext> createContext(Vertx vertx, UserInfos user, HttpServerRequest request) {
-        final String message = I18n.getInstance().translate("workspace.invalidfile.placeholder", Renders.getHost(request), I18n.acceptLanguage(request));
+        final String message = I18n.getInstance("org.entcore.workspace.Workspace").translate("workspace.invalidfile.placeholder", Renders.getHost(request), I18n.acceptLanguage(request));
         final Promise<FolderImporterZipContext> future = Promise.promise();
         request.uploadHandler(upload -> {
             createContext(vertx, user, upload, message).onComplete(future);

@@ -179,7 +179,7 @@ public class DefaultMassMailService extends Renders implements MassMailService {
                             return;
                         }
 
-                        notifHelper.sendEmail(
+                        notifHelper.sendEmail(config,
                                 request,
                                 userMail, null, null,
                                 mailTitle,

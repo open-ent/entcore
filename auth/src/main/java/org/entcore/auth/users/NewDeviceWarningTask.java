@@ -397,7 +397,7 @@ public class NewDeviceWarningTask extends TemplatedEmailRenders implements Handl
 
         String mailTemplate = user.federated ? "email/newDeviceWarningFederatedAccount.html" : "email/newDeviceWarning.html";
         processEmailTemplate(request, templateParams, mailTemplate, false, processedTemplate -> {
-            sender.sendEmail(request, Collections.singletonList(user.email), mailFrom, 
+            sender.sendEmail(config, request, Collections.singletonList(user.email), mailFrom,
                 null, //cc
                 null, //bcc
                 "email.new.device.subject",

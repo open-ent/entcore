@@ -602,7 +602,7 @@ public class AuthController extends BaseController {
 		}
 		if (error != null && !error.trim().isEmpty()) {
 			context.put("error", new JsonObject().put("message",
-					I18n.getInstance().translate(error, getHost(request), I18n.acceptLanguage(request))));
+					I18n.getInstance(config.getString("main")).translate(error, getHost(request), I18n.acceptLanguage(request))));
 		}
 		UserUtils.getUserInfos(eb, request, new io.vertx.core.Handler<UserInfos>() {
 			@Override
@@ -621,7 +621,7 @@ public class AuthController extends BaseController {
 		context.put("passwordRegex", passwordPattern.toString());
 		context.put("mandatory", config.getJsonObject("mandatory", new JsonObject()));
 		// Human-readable password format :
-		final I18n i18n = I18n.getInstance();
+		final I18n i18n = I18n.getInstance(config.getString("main"));
 		final JsonObject pwdResetFormatByLang = new JsonObject();
 		final JsonObject pwdActivationFormatByLang = new JsonObject();
 		i18n.getLanguages(Renders.getHost(request))
@@ -700,7 +700,7 @@ public class AuthController extends BaseController {
 		}
 		if (error != null && !error.trim().isEmpty()) {
 			context.put("error", new JsonObject().put("message",
-					I18n.getInstance().translate(error, getHost(request), I18n.acceptLanguage(request))));
+					I18n.getInstance(config.getString("main")).translate(error, getHost(request), I18n.acceptLanguage(request))));
 		}
 		UserUtils.getUserInfos(eb, request, new io.vertx.core.Handler<UserInfos>() {
 			@Override
@@ -1273,7 +1273,7 @@ public class AuthController extends BaseController {
 					trace.info(getIp(request) + " - Echec de l'activation du compte utilisateur " + login + " - Referer " + request.headers().get("Referer"));
 					JsonObject error = new JsonObject().put("error",
 							new JsonObject().put("message",
-									I18n.getInstance().translate("auth.activation.invalid.argument", getHost(request),
+									I18n.getInstance(config.getString("main")).translate("auth.activation.invalid.argument", getHost(request),
 											I18n.acceptLanguage(request))));
 					if (activationCode != null) {
 						error.put("activationCode", activationCode);
@@ -1300,7 +1300,7 @@ public class AuthController extends BaseController {
 											trace.info(getIp(request) + " - Echec de l'activation : utilisateur " + login + " en doublon" + " - Referer " + request.headers().get("Referer"));
 											JsonObject error = new JsonObject().put("error",
 													new JsonObject().put("message",
-															I18n.getInstance().translate(activated.left().getValue(),
+															I18n.getInstance(config.getString("main")).translate(activated.left().getValue(),
 																	getHost(request), I18n.acceptLanguage(request))));
 											error.put("activationCode", activationCode);
 											renderJson(request, error);
@@ -1319,7 +1319,7 @@ public class AuthController extends BaseController {
 																		+ login + " introuvable ou déjà activé" + " - Referer " + request.headers().get("Referer"));
 																JsonObject error = new JsonObject().put("error",
 																		new JsonObject().put("message",
-																				I18n.getInstance().translate(
+																				I18n.getInstance(config.getString("main")).translate(
 																						activated.left().getValue(),
 																						getHost(request),
 																						I18n.acceptLanguage(request))));
@@ -1751,7 +1751,7 @@ public class AuthController extends BaseController {
 						|| password == null || login.trim().isEmpty() || password.trim().isEmpty()
 						|| !password.equals(confirmPassword) || !passwordPattern.matcher(password).matches()) {
 					trace.info(getIp(request) + " - Erreur lors de la réinitialisation " + "du mot de passe de l'utilisateur " + login + " - Referer " + request.headers().get("Referer"));
-					JsonObject error = new JsonObject().put("error", new JsonObject().put("message", I18n.getInstance()
+					JsonObject error = new JsonObject().put("error", new JsonObject().put("message", I18n.getInstance(config.getString("main"))
 							.translate("auth.reset.invalid.argument", getHost(request), I18n.acceptLanguage(request))));
 					if (resetCode != null) {
 						error.put("resetCode", resetCode);
@@ -1819,7 +1819,7 @@ public class AuthController extends BaseController {
 
 			private void error(final HttpServerRequest request, final String resetCode) {
 				JsonObject error = new JsonObject().put("error", new JsonObject().put("message",
-						I18n.getInstance().translate("reset.error", getHost(request), I18n.acceptLanguage(request))));
+						I18n.getInstance(config.getString("main")).translate("reset.error", getHost(request), I18n.acceptLanguage(request))));
 				if (resetCode != null) {
 					error.put("resetCode", resetCode);
 				}

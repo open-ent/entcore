@@ -82,7 +82,6 @@ public class UserUtils {
 			.put("action", "visibleProfilsGroups");
 	private static final JsonObject QUERY_VISIBLE_MANUAL_GROUPS = new JsonObject()
 	.put("action", "visibleManualGroups");
-	private static final I18n i18n = I18n.getInstance();
 	private static final long JWT_TOKEN_EXPIRATION_TIME = 600L;
 	private static final long LOG_SESSION_DELAY = 500L;
 
@@ -264,7 +263,7 @@ public class UserUtils {
 		final String arg = name.substring(0, idx);
 		String type = name.substring(idx + 1);
 		String displayName = getOrElse(group.getString("groupDisplayName"), "group." + type);
-		String translatedName = i18n.translate(displayName, I18n.DEFAULT_DOMAIN, acceptLanguage, arg);
+		String translatedName = I18n.getInstance("org.entcore.conversation.Conversation").translate(displayName, I18n.DEFAULT_DOMAIN, acceptLanguage, arg);
 		if(!translatedName.equals(displayName))
 			group.put("name", translatedName);
 	}
@@ -277,7 +276,7 @@ public class UserUtils {
 		String arg = name.substring(0, idx);
 		String type = name.substring(idx + 1);
 		String displayName = groupDisplayName != null ? groupDisplayName : "group." + type;
-		String translatedName = i18n.translate(displayName, I18n.DEFAULT_DOMAIN, acceptLanguage, arg);
+		String translatedName = I18n.getInstance("org.entcore.conversation.Conversation").translate(displayName, I18n.DEFAULT_DOMAIN, acceptLanguage, arg);
 		if(!translatedName.equals(displayName)) {
 			return translatedName;
 		} else {

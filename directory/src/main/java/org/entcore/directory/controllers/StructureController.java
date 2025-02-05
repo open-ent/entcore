@@ -879,7 +879,7 @@ public class StructureController extends BaseController {
 													log.error("[StructureController] Error reading template: " + event2.body().getString("message"));
 												}
 											});
-											notifHelper.sendEmail(request, email, null, null, "admin.duplicate.notify.subject",
+											notifHelper.sendEmail(config, request, email, null, null, "admin.duplicate.notify.subject",
 													template, null, true, asyncHandler);
 										});
 										res.put("email", true);

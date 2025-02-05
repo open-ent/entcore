@@ -488,6 +488,7 @@ public class DefaultUserAuthAccount extends TemplatedEmailRenders implements Use
 			Promise<String> promise = Promise.promise();
 			processEmailTemplate(request, templateParams, emailTemplate, false, processedTemplate -> {
 				notification.sendEmail(
+						config,
 					request,
 					email,
 					null,
@@ -531,6 +532,7 @@ public class DefaultUserAuthAccount extends TemplatedEmailRenders implements Use
 		formatEmailSubject(request, "email.password.reset.subject", new JsonObject()).compose(subject -> {
 			Promise<String> promise = Promise.promise();
 			notification.sendEmail(
+					config,
 					request,
 					email,
 					config.getString("email", "noreply@one1d.fr"),
@@ -570,6 +572,7 @@ public class DefaultUserAuthAccount extends TemplatedEmailRenders implements Use
 			.put("login", login)
 			.put("host", notification.getHost(request));
 		notification.sendEmail(
+				config,
 				request,
 				email,
 				config.getString("email", "noreply@one1d.fr"),

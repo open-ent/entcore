@@ -30,6 +30,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -46,6 +48,7 @@ public abstract class AbstractActionFilter implements Filter {
 	private static final List<String> allowedNotChangePwPaths =
 			Arrays.asList("/userbook/preference/language","/theme", "/auth/oauth2/userinfo", "/userbook/preference/apps", "/auth/user/requirements");
 	protected static final List<String> authorizationTypes = Arrays.asList("Basic", "Bearer");
+	private static final Logger log = LoggerFactory.getLogger(AbstractActionFilter.class);
 	protected final Set<Binding> bindings;
 	protected final ResourcesProvider provider;
 
@@ -59,6 +62,11 @@ public abstract class AbstractActionFilter implements Filter {
 		if (checkForceChangePassword(request, session)) return;
 
 		Binding binding = requestBinding(request);
+		if (binding == null) {
+			log.error("SECURITY ERROR : No binding found for uri : " + request.path());
+			handler.handle(true);
+			return;
+		}
 		if (ActionType.WORKFLOW.equals(binding.getActionType())) {
 			authorizeWorkflowAction(session, binding, handler);
 		} else if (ActionType.RESOURCE.equals(binding.getActionType())) {

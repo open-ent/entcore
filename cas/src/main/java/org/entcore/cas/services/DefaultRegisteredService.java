@@ -48,7 +48,7 @@ import static org.entcore.common.aggregation.MongoConstants.TRACE_TYPE_CONNECTOR
 
 public class DefaultRegisteredService implements RegisteredService {
 	protected final MappingService mappingService = MappingService.getInstance();
-	protected final I18n i18n = I18n.getInstance();
+
 	protected final List<Mapping> criterias = new ArrayList<>();
 	private final Set<Mapping> confCriterias = new HashSet<>();
 	protected EventBus eb;
@@ -228,8 +228,8 @@ public class DefaultRegisteredService implements RegisteredService {
 		String baseKey = getId();
 		return new JsonObject()
 				.put("id", baseKey)
-				.put("name", i18n.translate(baseKey + ".name", I18n.DEFAULT_DOMAIN, acceptLanguage))
-				.put("description", i18n.translate(baseKey + ".description", I18n.DEFAULT_DOMAIN, acceptLanguage));
+				.put("name", I18n.getInstance("org.entcore.cas.Cas").translate(baseKey + ".name", I18n.DEFAULT_DOMAIN, acceptLanguage))
+				.put("description", I18n.getInstance("org.entcore.cas.Cas").translate(baseKey + ".description", I18n.DEFAULT_DOMAIN, acceptLanguage));
 	}
 
 	@Override

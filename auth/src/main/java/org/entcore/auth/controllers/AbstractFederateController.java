@@ -125,7 +125,7 @@ public abstract class AbstractFederateController extends BaseController {
 							" introuvable ou déjà activé.");
 					JsonObject error = new JsonObject()
 							.put("error", new JsonObject()
-									.put("message", I18n.getInstance()
+									.put("message", I18n.getInstance(config.getString("main"))
 											.translate(activated.left().getValue(), getHost(request), I18n.acceptLanguage(request))));
 					error.put("activationCode", activationCode);
 					renderJson(request, error);

@@ -70,7 +70,7 @@ public class Starter extends BaseServer {
 			serverMap.put("hidePersonalData", config.getBoolean("hidePersonalData", false));
 
 			//JWT need signKey
-			SecurityHandler.setVertx(vertx);
+
 			//encoding
 			final JsonArray encondings = config.getJsonArray("encoding-available", new JsonArray());
 			final JsonArray safeEncondigs = new JsonArray();

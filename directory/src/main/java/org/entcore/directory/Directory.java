@@ -58,7 +58,7 @@ public class Directory extends BaseServer {
 	@Override
 	protected void initFilters() {
 		super.initFilters();
-		addFilter(new UserbookCsrfFilter(getEventBus(vertx), securedUriBinding));
+		super.securityHandler.addFilter(new UserbookCsrfFilter(getEventBus(vertx), securedUriBinding));
 	}
 
 	@Override

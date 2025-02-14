@@ -199,6 +199,7 @@ public class TimetableReport {
    */
   private static final Map<String, FileTemplateProcessor> templateProcessors = new ConcurrentHashMap<String, FileTemplateProcessor>();
   private FileTemplateProcessor templator;
+  private String waitFileID = null;
   private Handler<String> waitFileHandler = null;
 
   public TimetableReport(Vertx vertx, JsonObject config) {

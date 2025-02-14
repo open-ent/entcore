@@ -53,13 +53,13 @@ public class AppOAuthResourceProvider extends DefaultOAuthResourceProvider {
 	private final Integer ttl;
 	private final EventBus eb;
 
-	public AppOAuthResourceProvider(EventBus eb, String prefix, Supplier<Optional<CacheService>> aCacheService, Optional<Integer> aTtl) {
+	public AppOAuthResourceProvider(EventBus eb, String prefix, Supplier<Optional<CacheService>> aCacheService, Integer aTtl) {
 		super(eb);
 		final String p = prefix.isEmpty() ? "portal" : prefix.substring(1);
 		prefixPattern = Pattern.compile("(^|\\s)" + p + "(\\s|$)");
 		eventStore = EventStoreFactory.getFactory().getEventStore(p);
 		cacheServiceSupplier = aCacheService;
-		ttl = aTtl.isPresent()? aTtl.get() : DEFAULT_TTL_SECONDS;
+		ttl = aTtl != null ? aTtl : DEFAULT_TTL_SECONDS;
 		this.eb = eb;
 
 	}

@@ -34,6 +34,7 @@ import fr.wseduc.webutils.security.SecureHttpServerRequest;
 import fr.wseduc.webutils.validation.JsonSchemaValidator;
 
 import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
 import io.vertx.core.shareddata.LocalMap;
 import org.entcore.common.cache.CacheFilter;
 import org.entcore.common.cache.CacheService;
@@ -82,6 +83,8 @@ public abstract class BaseServer extends Server {
 	private String contentSecurityPolicy;
 	private AccessLogger accessLogger;
 
+	protected SecurityHandler securityHandler;
+
 	public static String getModuleName() {
 		return moduleName;
 	}
@@ -101,6 +104,8 @@ public abstract class BaseServer extends Server {
 
 		Mfa.Factory.getFactory().init(vertx, config);
 
+
+		securityHandler = new SecurityHandler(vertx);
 		initFilters();
 
 		String node = (String) vertx.sharedData().getLocalMap("server").get("node");
@@ -117,11 +122,13 @@ public abstract class BaseServer extends Server {
 			initModulesHelpers(node);
 		}
 
+
+
 		if (config.getBoolean("csrf-token", false)) {
-			addFilter(new CsrfFilter(getEventBus(vertx), securedUriBinding));
+			securityHandler.addFilter(new CsrfFilter(getEventBus(vertx), securedUriBinding));
 		}
 		if (config.getBoolean("block-route-filter", false)) {
-			addFilter(new BlockRouteFilter(vertx, getEventBus(vertx), Server.getPathPrefix(config),
+			securityHandler.addFilter(new BlockRouteFilter(vertx, getEventBus(vertx), Server.getPathPrefix(config),
 				config.getLong("block-route-filter-refresh-period", 5 * 60 * 1000L),
 				config.getBoolean("block-route-filter-redirect-if-mobile", true),
 				config.getInteger("block-route-filter-error-status-code", 401)
@@ -134,15 +141,15 @@ public abstract class BaseServer extends Server {
 		final Boolean cacheEnabled = (Boolean) server.getOrDefault("cache-filter", false);
 		if(Boolean.TRUE.equals(cacheEnabled)){
 			final CacheService cacheService = CacheService.create(vertx);
-			addFilter(new CacheFilter(getEventBus(vertx),securedUriBinding, cacheService));
+			securityHandler.addFilter(new CacheFilter(getEventBus(vertx),securedUriBinding, cacheService));
 		}
 
-		addFilter(new MandatoryUserValidationFilter(mfaProtectedBinding, getEventBus(vertx)));
+		securityHandler.addFilter(new MandatoryUserValidationFilter(mfaProtectedBinding, getEventBus(vertx)));
 
 		if (config.getString("integration-mode","BUS").equals("HTTP")) {
-			addFilter(new HttpActionFilter(securedUriBinding, config, vertx, resourceProvider));
+			securityHandler.addFilter(new HttpActionFilter(securedUriBinding, config, vertx, resourceProvider));
 		} else {
-			addFilter(new ActionFilter(securedUriBinding, vertx, resourceProvider));
+			securityHandler.addFilter(new ActionFilter(securedUriBinding, vertx, resourceProvider));
 		}
 		vertx.eventBus().localConsumer("user.repository", repositoryHandler);
 		vertx.eventBus().localConsumer("search.searching", this.searchingHandler);
@@ -152,7 +159,6 @@ public abstract class BaseServer extends Server {
 
 		addController(new RightsController());
 		addController(new ConfController());
-		SecurityHandler.setVertx(vertx);
 
 		final Map<String, String> skins = vertx.sharedData().getLocalMap("skins");
 		Renders.getAllowedHosts().addAll(skins.keySet());
@@ -164,33 +170,55 @@ public abstract class BaseServer extends Server {
 	}
 
 	protected void initFilters() {
-		//prepare cache if needed
-		final LocalMap<Object, Object> server = vertx.sharedData().getLocalMap("server");
-		final Optional<Object> oauthCache = Optional.ofNullable(server.get("oauthCache"));
-		final Optional<JsonObject> oauthConfigJson = oauthCache.map(e-> new JsonObject((String)e));
-		final Optional<Integer> oauthTtl = oauthConfigJson.map( e -> e.getInteger("ttlSeconds"));
-		//
-		clearFilters();
-		addFilter(new AccessLoggerFilter(accessLogger));
-		addFilter(new WebviewFilter(vertx, getEventBus(vertx)));
-		UserAuthFilter userAuth = new UserAuthWithQueryParamFilter(
-			new AppOAuthResourceProvider(
-				getEventBus(vertx), getPathPrefix(config), ()->{
-					try{
-						if(!oauthConfigJson.get().getBoolean("enabled", false)) return Optional.empty();
-						return Optional.ofNullable(CacheService.create(vertx));
-					}catch(Exception e){
-						return Optional.empty();
-					}
-			}, oauthTtl), 
-			new BasicFilter(),
-			new QueryParamTokenFilter(),
-			this
-		);
-		addFilter(userAuth);
+		// Récupération thread-safe de la configuration OAuth
+		final JsonObject oauthConfigJson;
+		final Integer oauthTtl;
 
-		addFilter(new TraceFilter(getEventBus(vertx), config, securedUriBinding));
+		synchronized (this) {  // Synchronisation pour éviter les lectures concurrentes
+			final LocalMap<Object, Object> server = vertx.sharedData().getLocalMap("server");
+			final Object cacheValue = server.get("oauthCache");
+
+			if (cacheValue != null) {
+				oauthConfigJson = new JsonObject((String) cacheValue);
+				oauthTtl = oauthConfigJson.getInteger("ttlSeconds");
+			} else {
+				oauthConfigJson = new JsonObject();
+				oauthTtl = null;
+			}
+		}
+
+		// Effacement et ajout des filtres dans un bloc synchronisé
+		synchronized (this) {
+			securityHandler.clearFilters();
+			securityHandler.addFilter(new AccessLoggerFilter(accessLogger));
+			securityHandler.addFilter(new WebviewFilter(vertx, getEventBus(vertx)));
+
+			UserAuthFilter userAuth = new UserAuthWithQueryParamFilter(
+					new AppOAuthResourceProvider(
+							getEventBus(vertx),
+							getPathPrefix(config),
+							() -> {
+								try {
+									if (!oauthConfigJson.getBoolean("enabled", false)) {
+										return Optional.empty();
+									}
+									return Optional.ofNullable(CacheService.create(vertx));
+								} catch (Exception e) {
+									return Optional.empty();
+								}
+							},
+							oauthTtl
+					),
+					new BasicFilter(),
+					new QueryParamTokenFilter(),
+					this
+			);
+
+			securityHandler.addFilter(userAuth);
+			securityHandler.addFilter(new TraceFilter(getEventBus(vertx), config, securedUriBinding));
+		}
 	}
+
 
 	@Override
 	protected Server addController(BaseController controller) {

@@ -35,14 +35,17 @@ public class RepositoryHandler implements Handler<Message<JsonObject>> {
 
 	private RepositoryEvents repositoryEvents;
 	private final EventBus eb;
+	private JsonObject config;
 
-	public RepositoryHandler(EventBus eb) {
+	public RepositoryHandler(EventBus eb, JsonObject config) {
 		this.eb = eb;
+		this.config = config;
 		this.repositoryEvents = new LogRepositoryEvents();
 	}
 
-	public RepositoryHandler(RepositoryEvents repositoryEvents, EventBus eb) {
+	public RepositoryHandler(RepositoryEvents repositoryEvents, EventBus eb, JsonObject config) {
 		this.eb = eb;
+		this.config = config;
 		this.repositoryEvents = repositoryEvents;
 	}
 
@@ -65,7 +68,7 @@ public class RepositoryHandler implements Handler<Message<JsonObject>> {
 				final JsonArray resourcesIds = message.body().getJsonArray("resourcesIds");
 				final Boolean exportDocuments = message.body().getBoolean("exportDocuments", true);
 				final Boolean exportSharedResources = message.body().getBoolean("exportSharedResources", true);
-				String title = Server.getPathPrefix(Config.getConf());
+				String title = ""; //Server.getPathPrefix(Config.getConf());
 
 				if (!Utils.isEmpty(title) && exportApps.contains(title.substring(1)))
 				{
@@ -105,7 +108,7 @@ public class RepositoryHandler implements Handler<Message<JsonObject>> {
 				//Fallthrough
 			case "import" :
 				final JsonObject importApps = message.body().getJsonObject("apps");
-				final String appTitle = Server.getPathPrefix(Config.getConf());
+				final String appTitle = config.getString("path-prefix");
 
 				if (!Utils.isEmpty(appTitle) && importApps.containsKey(appTitle.substring(1)))
 				{

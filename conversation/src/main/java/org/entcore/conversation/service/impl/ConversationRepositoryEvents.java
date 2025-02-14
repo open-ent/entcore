@@ -49,8 +49,8 @@ public class ConversationRepositoryEvents extends SqlRepositoryEvents {
 	private final Storage storage;
 	private final long timeout;
 
-	public ConversationRepositoryEvents(Storage storage, long timeout, Vertx vertx) {
-		super(vertx);
+	public ConversationRepositoryEvents(Storage storage, long timeout, Vertx vertx, JsonObject config) {
+		super(vertx, config);
 		this.storage = storage;
 		this.timeout = timeout;
 		this.mainResourceName = "messages";

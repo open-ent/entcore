@@ -55,8 +55,8 @@ public class FolderTest {
 
     @BeforeClass
     public static void setUp(TestContext context) throws Exception {
-        Config.getInstance().setConfig(new JsonObject());
-        conversationService = new SqlConversationService(test.vertx(), schema);
+        Config.getInstance().setModuleConfig("org.entcore.conversation.Conversation", new JsonObject());
+        conversationService = new SqlConversationService(test.vertx(), new JsonObject().put("max-folder-depth", 2), schema);
         test.database().initPostgreSQL(context, pgContainer, schema);
     }
 

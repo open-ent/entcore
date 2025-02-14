@@ -30,8 +30,8 @@ public abstract class SqlRepositoryEvents extends AbstractRepositoryEvents {
 
     protected String mainResourceName = null;
 
-	protected SqlRepositoryEvents(Vertx vertx) {
-		super(vertx);
+	protected SqlRepositoryEvents(Vertx vertx, JsonObject config) {
+		super(vertx, config);
 		fileImporter = new FolderImporter(vertx, vertx.fileSystem(), vertx.eventBus());
 	}
 

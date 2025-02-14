@@ -194,9 +194,11 @@ public class TimetableReport {
   private long nbUsersFound = 0;
   private List<User> missingUsers = new LinkedList<User>();
 
-  private static final Map<Vertx, FileTemplateProcessor> templateProcessors = new ConcurrentHashMap<Vertx, FileTemplateProcessor>();
+  /**
+   * 1 template processor per module instance
+   */
+  private static final Map<String, FileTemplateProcessor> templateProcessors = new ConcurrentHashMap<String, FileTemplateProcessor>();
   private FileTemplateProcessor templator;
-  private String waitFileID = null;
   private Handler<String> waitFileHandler = null;
 
   public TimetableReport(Vertx vertx, JsonObject config) {
@@ -204,17 +206,18 @@ public class TimetableReport {
   }
 
   public TimetableReport(Vertx vertx, JsonObject config, String locale) {
-    this.templator = TimetableReport.templateProcessors.get(vertx);
+    this.templator = TimetableReport.templateProcessors.get(config.getString("main"));
 
     if(this.templator == null)
     {
       this.templator = new FileTemplateProcessor(vertx, config.getString("main"), "template");
       this.templator.escapeHTML(false);
 
+
       this.templator.setLambda("i18n", new I18nLambda(config.getString("main"), locale));
       this.templator.setLambda("datetime", new LocaleDateLambda(locale));
 
-      TimetableReport.templateProcessors.put(vertx, this.templator);
+      TimetableReport.templateProcessors.put(config.getString("main"), this.templator);
     }
   }
 

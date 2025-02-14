@@ -112,7 +112,7 @@ public class ConversationController extends BaseController {
 		this.conversationService = new DefaultConversationService(vertx,
 				config.getString("app-name", Conversation.class.getSimpleName()));
 				*/
-		this.conversationService = new SqlConversationService(vertx, config.getString("db-schema", "conversation"))
+		this.conversationService = new SqlConversationService(vertx, config, config.getString("db-schema", "conversation"))
 				.setSendTimeout(config.getInteger("send-timeout",SqlConversationService.DEFAULT_SENDTIMEOUT));
 		this.neoConversationService = new Neo4jConversationService();
 		notification = new TimelineHelper(vertx, eb, config);
@@ -1123,7 +1123,7 @@ public class ConversationController extends BaseController {
 	@Get("max-depth")
 	@SecuredAction(value="conversation.max.depth", type=ActionType.AUTHENTICATED)
 	public void getMaxDepth(final HttpServerRequest request){
-		renderJson(request, new JsonObject().put("max-depth", Config.getConf().getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH)));
+		renderJson(request, new JsonObject().put("max-depth", config.getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH)));
 	}
 
 	//List folders at a given depth, or trashed folders at depth 1 only.

@@ -59,21 +59,9 @@ public class MongoDbRepositoryEvents extends AbstractRepositoryEvents {
 	private final FolderImporter fileImporter;
 	protected final Map<String, String> collectionNameToImportPrefixMap = new LinkedHashMap<String, String>();
 
-	public MongoDbRepositoryEvents() {
-		this(null, null, null, null);
-	}
-
-	public MongoDbRepositoryEvents(String managerRight) {
-		this(null, managerRight, null, null);
-	}
-
-	public MongoDbRepositoryEvents(Vertx vertx) {
-		this(vertx, null, null, null);
-	}
-
-	public MongoDbRepositoryEvents(Vertx vertx, String managerRight, String revisionsCollection,
+	public MongoDbRepositoryEvents(Vertx vertx, JsonObject config, String managerRight, String revisionsCollection,
 								   String revisionIdAttribute) {
-		super(vertx);
+		super(vertx, config);
 		this.managerRight = managerRight;
 		this.revisionsCollection = revisionsCollection;
 		this.revisionIdAttribute = revisionIdAttribute;

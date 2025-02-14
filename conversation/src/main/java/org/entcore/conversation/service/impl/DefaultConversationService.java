@@ -48,15 +48,17 @@ import java.util.*;
 public class DefaultConversationService implements ConversationService {
 
 	private final EventBus eb;
+	private JsonObject config;
 	private final Neo neo;
 	private final String applicationName;
 	private final int maxFolderDepth;
 
-	public DefaultConversationService(Vertx vertx, String applicationName) {
+	public DefaultConversationService(Vertx vertx, JsonObject config, String applicationName) {
 		eb = Server.getEventBus(vertx);
+		this.config = config;
 		neo = new Neo(vertx, eb, LoggerFactory.getLogger(Neo.class));
 		this.applicationName = applicationName;
-		this.maxFolderDepth = Config.getConf().getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH);
+		this.maxFolderDepth = config.getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH);
 	}
 
 	@Override

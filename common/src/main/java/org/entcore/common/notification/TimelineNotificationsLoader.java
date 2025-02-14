@@ -143,7 +143,7 @@ public class TimelineNotificationsLoader {
 	}
 
 	private void processNotification(String path){
-		final String appName = Config.getConf().getString("app-name");
+		final String appName = config.getString("app-name");
 		if(appName == null || appName.trim().isEmpty()){
 			log.error("Invalid application name while registering notification at path : " + path);
 			return;
@@ -170,8 +170,8 @@ public class TimelineNotificationsLoader {
 				final JsonObject notificationJson = new JsonObject()
 						.put("type", type.toUpperCase())
 						.put("event-type", notificationName.toUpperCase())
-						.put("app-name", Config.getConf().getString("app-name"))
-						.put("app-address", Config.getConf().getString("app-address", "/"))
+						.put("app-name", Config.getInstance().getModuleConfig(path).getString("app-name"))
+						.put("app-address", Config.getInstance().getModuleConfig(path).getString("app-address", "/"))
 						.put("template", templateAsync.result().toString())
 						.put("defaultFrequency", Frequencies.defaultFrequency())
 						.put("restriction", Restrictions.defaultRestriction())

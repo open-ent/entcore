@@ -107,11 +107,11 @@ public abstract class BaseServer extends Server {
 
 		contentSecurityPolicy = (String) vertx.sharedData().getLocalMap("server").get("contentSecurityPolicy");
 
-		repositoryHandler = new RepositoryHandler(getEventBus(vertx));
+		repositoryHandler = new RepositoryHandler(getEventBus(vertx), config);
 		searchingHandler = new SearchingHandler(getEventBus(vertx));
 		i18nHandler = new I18nHandler(config);
 
-		Config.getInstance().setConfig(config);
+		Config.getInstance().setModuleConfig(config.getString("main"), config);
 
 		if (node != null) {
 			initModulesHelpers(node);
@@ -189,7 +189,7 @@ public abstract class BaseServer extends Server {
 		);
 		addFilter(userAuth);
 
-		addFilter(new TraceFilter(getEventBus(vertx), securedUriBinding));
+		addFilter(new TraceFilter(getEventBus(vertx), config, securedUriBinding));
 	}
 
 	@Override

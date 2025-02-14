@@ -48,7 +48,7 @@ public class Conversation extends BaseServer {
 
 		addController(new ConversationController(storage, exportPath));
 
-		setRepositoryEvents(new ConversationRepositoryEvents(storage, getOrElse(config.getLong("repositoryEventsTimeout"), 300000l),vertx));
+		setRepositoryEvents(new ConversationRepositoryEvents(storage, getOrElse(config.getLong("repositoryEventsTimeout"), 300000l),vertx, config));
 
 		final String deleteOrphanCron = config.getString("deleteOrphanCron");
 		if (deleteOrphanCron != null) {

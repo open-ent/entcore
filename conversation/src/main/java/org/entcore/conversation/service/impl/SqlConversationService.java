@@ -65,10 +65,10 @@ public class SqlConversationService implements ConversationService{
 	private final boolean optimizedThreadList;
 	private int sendTimeout = DEFAULT_SENDTIMEOUT;
 
-	public SqlConversationService(Vertx vertx, String schema) {
+	public SqlConversationService(Vertx vertx, JsonObject config, String schema) {
 		this.eb = Server.getEventBus(vertx);
 		this.sql = Sql.getInstance();
-		this.maxFolderDepth = Config.getConf().getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH);
+		this.maxFolderDepth = config.getInteger("max-folder-depth", Conversation.DEFAULT_FOLDER_DEPTH);
 		messageTable = schema + ".messages";
 		folderTable = schema + ".folders";
 		attachmentTable = schema + ".attachments";

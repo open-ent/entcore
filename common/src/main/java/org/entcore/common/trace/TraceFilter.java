@@ -36,6 +36,7 @@ public class TraceFilter implements Filter {
     private static final int DEFAULT_RETENTION_DAYS = 365;
     private static final Logger log = LoggerFactory.getLogger(TraceFilter.class);
     private final EventBus eb;
+    private final JsonObject config;
     private final Set<Binding> bindings;
     private Set<Binding> tracedBinding;
     HashMap<String, JsonObject> actions = new HashMap<>();
@@ -43,8 +44,9 @@ public class TraceFilter implements Filter {
 
     private static final String COLLECTION = "traces";
 
-    public TraceFilter(EventBus eb, Set<Binding> bindings) {
+    public TraceFilter(EventBus eb, JsonObject config, Set<Binding> bindings) {
         this.eb = eb;
+        this.config = config;
         this.bindings = bindings;
     }
 
@@ -112,7 +114,7 @@ public class TraceFilter implements Filter {
                     UserInfos user = userFuture.future().result();
 
                     JsonObject trace = new JsonObject()
-                            .put("application", Config.getInstance().getConfig().getString("app-name"))
+                            .put("application", config.getString("app-name"))
                             .put("user", getUserObject(user))
                             .put("request", getActionObject(request))
                             .put("entry", entry)

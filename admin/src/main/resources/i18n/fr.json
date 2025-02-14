@@ -1673,5 +1673,15 @@
   "user.merge.oldmerge.button": "Ne pas conserver",
   "user.merge.newmerge.button": "Conserver",
   "position.name.already.used": "Une fonction du même nom existe déjà dans cette structure",
-  "position.not.accessible": "Cette fonction ne peut être modifiée"
+  "position.not.accessible": "Cette fonction ne peut être modifiée",
+  "functional.groups": "Groupes scolarité",
+  "import.classesChecking.info.0": "Association et création des classes",
+  "management.zimbra.panel.content": "Ouverture de la messagerie vers l'exterieur",
+  "management.zimbra.return.statut.ERROR": "Erreur pendant le rappel",
+  "management.zimbra.return.statut.PROGRESS": "Rappel en cours",
+  "management.zimbra.return.statut.REMOVED": "Rappel effectué",
+  "management.zimbra.return.statut.WAITING": "En attente de validation",
+  "manual.groups": "Groupes manuels",
+  "manualGroups.multi.combo.title": "Groupes manuels",
+  "profile.groups": "Groupes de profil"
 }

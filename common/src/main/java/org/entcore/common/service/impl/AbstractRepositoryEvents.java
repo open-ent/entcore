@@ -42,7 +42,7 @@ public abstract class AbstractRepositoryEvents implements RepositoryEvents {
 	protected AbstractRepositoryEvents(Vertx vertx, JsonObject config)
 	{
 		this.vertx = vertx;
-		String app = config.getString("path-prefix").substring(1);
+		String app = config.getString("path-prefix");
 		this.title = String.valueOf(app.charAt(0)).toUpperCase() + app.substring(1);
 
 		if (vertx != null)
